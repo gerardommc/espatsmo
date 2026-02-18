@@ -1,0 +1,16 @@
+Package: espatsmo
+Type: Package
+Title: Fit point process models for species distribution modelling.
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Gerardo", "Martin",
+      email = "gerardo.mmc@enesmerida.unam.mx",
+      role = c("aut", "cre")
+    )
+  )
+Description: More about what it does (maybe more than one line).
+    Continuation lines should be indented.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
