@@ -22,4 +22,5 @@ Imports:
       INLA,
       sf,
       data.table
-      
+Additional_repositories:
+      https://inla.r-inla-download.org/R/stable
