@@ -11,7 +11,6 @@
 
 partialROC <- function(raster, points, p.points = 0.5, iterations = 39,
                        buf = NULL, omission = 0, save.pdf = T, pdf.name = "PartialROC"){
-  require(terra)
   
   if(!is.null(buf)){
     p <- terra::vect(as.matrix(points[, -3]))

@@ -65,10 +65,7 @@ ppmLGCP <- function(points = NULL,
                       at.locs = T,
                       inla.mode = "experimental"){
   
-  require(INLA)
-  require(terra)
-  require(spatstat)
-  require(sf)
+  #require(terra)
   
   INLA::inla.setOption(inla.mode = inla.mode)
 
@@ -342,7 +339,7 @@ ppmLGCP <- function(points = NULL,
   gc(reset = T)
 
   points.v <- data.frame(lon = points$x, lat = points$y) |> terra::vect()
-    crs(points.v) <- crs(covariates)
+    crs(points.v) <- terra::crs(covariates)
 
   points.r <- terra::rasterize(points.v, covariates, fun = "count")
   points.df <- as.data.frame(points.r, xy = T)

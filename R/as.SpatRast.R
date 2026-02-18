@@ -10,8 +10,6 @@
 
 as.SpatRast <- function(imList = NULL, 
                         target.crs = NULL){
-  require(terra)
-  require(spatstat)
   
   if(class(imList) != "imList" | class(imList) != "im"){
     stop("Please provide an imList or im object")

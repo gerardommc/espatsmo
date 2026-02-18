@@ -12,8 +12,6 @@
 NegPosNorm <- function(r = NULL, 
                        target.crs = NULL,
                        as.imList = F){
-  require(terra)
-  require(spatstat)
 
   if(class(r) == "imList"){
     r <- as.SpatRast(r)

@@ -12,9 +12,7 @@
 getPolyFormulas <- function(respDF = NULL, 
                             compatMat = NULL){
                               
-  require(foreach)
 
-  
   if(is.null(respDF)){
     stop("Cannot produce formulas, please provide a valid description of variable responses")
   }

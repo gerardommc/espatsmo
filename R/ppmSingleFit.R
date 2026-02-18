@@ -37,8 +37,7 @@ ppmSingleFit <- function(points= NULL,
                                 improve.args=list(),
                                 prior.mean = NULL,
                                 prior.var = NULL)){
-  require(spatstat)
-  require(terra)
+
   
   source("Spatstat-functions/imFromStack.R")
   source("Spatstat-functions/replaceQAreas.R")

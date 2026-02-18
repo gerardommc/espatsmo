@@ -10,9 +10,6 @@ findCompatibles <- function(covariates = NULL,
                             thres = 0.6, 
                             max.comb = 3){
 
-  require(spatstat)
-  require(terra)
-
   if(is.null(covariates)){
     stop("Cannot compute compatibilities without data, please provide either a multi-band SpatRaster, data.frame or imList containing only continuous variables")
   }

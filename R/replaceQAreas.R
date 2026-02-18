@@ -29,10 +29,7 @@ replaceQAreas <- function(Q = NULL,
                           varcov = NULL, 
                           weights = NULL, 
                           edge = TRUE){
-  require(spatstat)
-  require(terra)
-  require(data.table)
-  require(foreach)
+
   
   if(class(bias.data) == "data.frame"){
   sample.ppp <- spatstat.geom::ppp(x = bias.data$x, y = bias.data$y, window = Q$dummy$window)

@@ -8,7 +8,6 @@
 #' @return A character vector containing the model formulas for each row of variable cobinations in compatMat.
 
 getGAMFormulas <- function(respDF, compatMat){
-  require(foreach)
   
   formulas <-  foreach::foreach(i = 1:nrow(compatMat), .combine = c) %do% {
     v <- compatMat[i, ]

@@ -29,9 +29,7 @@ plotResponses <- function(points = NULL,
                                                   p.keep = 0.5),
                           save.plot = F,
                           plot.pars = list(name = "ResponsePlot.pdf", width = 5, height = 5)){
-  
-  require(terra)
-  require(spatstat)
+
   
   if(is.null(bias.correction)){
 

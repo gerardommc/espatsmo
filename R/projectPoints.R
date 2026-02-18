@@ -10,7 +10,6 @@ projectPoints <- function(lon = NULL,
                           lat = NULL,
                           origin.crs = "EPSG:4326",
                           target.crs = NULL){
-  require(terra)
 
   if(is.null(target.crs)){stop("Please provide a valid target CRS")}
   

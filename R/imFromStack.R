@@ -7,9 +7,6 @@
 
 imFromStack <- function(r = NULL){
 
-    require(spatstat)
-    require(terra)
-
     if(is.null(r)){
         stop("Cannot generate imList without a SpatRaster")
     }

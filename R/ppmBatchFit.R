@@ -43,9 +43,6 @@ ppmBatchFit <- function(points= NULL,
                                         improve.args=list(),
                                         prior.mean = NULL,
                                         prior.var = NULL)){ 
-    require(spatstat)
-    require(terra)
-    require(foreach)
     
     if(length(formulas) == 1){
       stop("ppmBatchFit requires more than 1 formula, please use ppmSingleFit")
@@ -184,11 +181,9 @@ ppmBatchFit <- function(points= NULL,
   
   if(parallel){
   
-    require(doParallel)
     doParallel::registerDoParallel(cores = cores)
     
     models <- doParallel::foreach(i = seq_along(formulas)) %dopar% {
-      require(spatstat)
       
       form <- as.formula(formulas[i])
       m <- spatstat.model::ppm(Q, trend = form, 

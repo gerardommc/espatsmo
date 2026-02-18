@@ -27,8 +27,6 @@ maskBias <- function(covariates = NULL,
                      weights = NULL, edge = TRUE,
                      p.keep = 0.5,
                      as.imList = F){
-  require(terra)
-  require(spatstat)
 
   if(is.null(covariates) | is.null(bias.data) | is.null(points)){
     stop("Cannot filter null data, please provide a sample SpatRaster, bias data and presence points")

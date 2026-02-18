@@ -12,8 +12,6 @@
 ZeroOneNorm <- function(r = NULL, 
                         as.imList = F,
                         target.crs = NULL){
-  require(terra)
-  require(spatstat)
 
   if(is.null(r)){
     stop("Please provide a valid SpatRaster or imList")
