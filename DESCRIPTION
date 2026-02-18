@@ -11,14 +11,15 @@ Authors@R: c(
     person(
       "Eduardo", "Pacheco",
       email = "epacheco@ciencias.unam.mx",
-      role = c("aut", "cre")
+      role = c("ctb")
     )
   )
 Description: This package presents a workflow akin to ecological niche modellers using spatstat
       as the model fitting engine. In addition, it provides functionalities for correcting observation bias
       automatic generation of model formulas, fitting and comparing models. The end is also to provide
       a user-friendly inteface for using INLA to fit a log-Gaussian Cox point process model.
-License: What license is it under?
+Maintainer: Gerardo Martín <gerardo.mmc@enesmerida.unam.mx>
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
