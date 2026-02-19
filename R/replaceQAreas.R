@@ -40,7 +40,7 @@ replaceQAreas <- function(Q = NULL,
   
   if(nsim > 1){
   dx <- foreach::foreach(i = 1:nsim, .combine = cbind) %do% {
-    s <- sample(1:nrow(df.sim), npoints(sample.ppp), replace = T)
+    s <- sample(1:nrow(df.sim), spatstat.geom::npoints(sample.ppp), replace = T)
     d <- df.sim[s, ]
     pts <- spatstat.geom::ppp(x = d$x, y = d$y, window = sample.ppp$window)
     df <- spatstat.explore::density.ppp(pts, positive = TRUE, kernel = "gaussian",
@@ -53,7 +53,7 @@ replaceQAreas <- function(Q = NULL,
   d.E <- sim.sur
   d.E[] <- d.mean
   } else {
-    s <- sample(1:nrow(df.sim), npoints(sample.ppp), replace = T)
+    s <- sample(1:nrow(df.sim), spatstat.geom::npoints(sample.ppp), replace = T)
     d <- df.sim[s, ]
     pts <- spatstat.geom::ppp(x = d$x, y = d$y, window = sample.ppp$window)
     d.E <- spatstat.explore::density.ppp(pts, positive = positive, kernel = kernel,
