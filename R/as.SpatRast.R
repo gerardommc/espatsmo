@@ -11,7 +11,7 @@
 as.SpatRast <- function(x = NULL, 
                         target.crs = NULL){
   
-  if(class(x) != "imList" | class(x) != "im"){
+  if(!class(x) %in% c("imList" , "im")){
     stop("Please provide an imList or im object")
   }
 

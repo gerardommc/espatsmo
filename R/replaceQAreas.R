@@ -22,7 +22,6 @@
 replaceQAreas <- function(Q = NULL, 
                           bias.data = NULL,
                           im = NULL, 
-                          nsim = 39,
                           positive = TRUE, 
                           kernel = "gaussian",
                           sigma = NULL, 
@@ -32,67 +31,67 @@ replaceQAreas <- function(Q = NULL,
 
   
   if(class(bias.data) == "data.frame"){
-  sample.ppp <- spatstat.geom::ppp(x = bias.data$x, y = bias.data$y, window = Q$dummy$window)
-  
-  sim.sur <- im
-  
-  df.sim <- as.data.frame(sim.sur)
-  
-  if(nsim > 1){
-  dx <- foreach::foreach(i = 1:nsim, .combine = cbind) %do% {
-    s <- sample(1:nrow(df.sim), spatstat.geom::npoints(sample.ppp), replace = T)
-    d <- df.sim[s, ]
-    pts <- spatstat.geom::ppp(x = d$x, y = d$y, window = sample.ppp$window)
-    df <- spatstat.explore::density.ppp(pts, positive = TRUE, kernel = "gaussian",
-                      sigma = NULL, varcov = NULL, 
-                      weights = NULL, edge = TRUE) |> as.data.frame()
-    return(df[, 3])
-  }
-  d.mean <- dx |> rowMeans()
-  
-  d.E <- sim.sur
-  d.E[] <- d.mean
-  } else {
-    s <- sample(1:nrow(df.sim), spatstat.geom::npoints(sample.ppp), replace = T)
-    d <- df.sim[s, ]
-    pts <- spatstat.geom::ppp(x = d$x, y = d$y, window = sample.ppp$window)
-    d.E <- spatstat.explore::density.ppp(pts, positive = positive, kernel = kernel,
-                       sigma = sigma, varcov = varcov, 
-                       weights = weights, edge = edge)
-  }
-  
-  d.obs <- spatstat.explore::density.ppp(sample.ppp, positive = positive, kernel = kernel,
-                       sigma = sigma, varcov = varcov, 
-                       weights = weights, edge = edge)
-
-  AreaWeights <- d.obs/d.E
-  
-  begin <- Q$w |> length() - length(AreaWeights[]) +1
-  end <- Q$w |> length()
-  
-  NewAreas <- Q$w[begin:end] * AreaWeights[]
-  Q$w[begin:end] <- NewAreas
-  
-  return(Q)}
-  
-  if(!class(bias.data) == "data.frame"){
+      window <- Q$dummy$window
     
-    if(class(bias.data) == "SpatRaster"){
-      im.r <- terra::rast(im)
-      crs(im.r) <- terra::crs(bias.data)
-      bias.data <- terra::resample(bias.data, im.r)
-      AreaWeights <- imFromStack(bias.data)
-    }
+    if(inherits(im, "SpatRaster")){r <- im}
+    if(inherits(im, "im")){r <- terra::im(im)}
+    if(inherits(im, "imList")){r <- terra::rast(im[[1]])}
     
-    if(class(bias.data) == "im"){
-      im.r <- terra::rast(im)
-      bias.data <- terra::rast(bias.data)
-      bias.data <- terra::resample(bias.data, im.r)
-      AreaWeights <- imFromStack(bias.data)
-    }
+    r.counts <- terra::rasterize(bias.data, r, fun = "count") |> terra::as.data.frame(xy = T)
+    
+    sample.ppp <- spatstat.geom::ppp(x = r.counts$x, y = r.counts$y, marks = r.counts$count, window = window)
+    
+    df.weights <- terra::as.data.frame(r, xy = T)
+    df.weights[, 3] <- sum(r.counts$count)/nrow(df.weights)
+    
+    d.E <- terra::rast(df.weights) |> imFromStack()
+    
+    d.obs <- spatstat.explore::density.ppp(sample.ppp, positive = positive, kernel = kernel,
+                                           sigma = sigma, varcov = varcov, 
+                                           weights = marks, edge = edge)
+    
+    AreaWeights <- d.obs/d.E
     
     begin <- Q$w |> length() - length(AreaWeights[]) +1
     end <- Q$w |> length()
+    
+    NewAreas <- Q$w[begin:end] * AreaWeights[]
+    Q$w[begin:end] <- NewAreas
+    
+    return(Q)}
+  
+  if(!class(bias.data) == "data.frame"){
+    
+    if(inherits(bias.data, "SpatRaster")){
+      im.r <- terra::rast(im)
+      crs(im.r) <- terra::crs(bias.data)
+      bias.data <- terra::resample(bias.data, im.r)
+      
+      zo <- ZeroOneNorm(bias.data, as.imList = F)
+      sum.zo <- terra::global(zo, "sum", na.rm = T)
+      zo <- zo/sum.zo$sum
+      
+      SampleRatios <- imFromStack(zo/sum.zo$sum)
+    }
+    
+    if(inherits(bias.data, "im")){
+      im.r <- terra::rast(im)
+      bias.data <- terra::rast(bias.data)
+      bias.data <- terra::resample(bias.data, im.r)
+      
+      zo <- ZeroOneNorm(bias.data, as.imList = F)
+      sum.zo <- terra::global(zo, "sum", na.rm = T)
+      zo <- zo/sum.zo$sum
+      
+      SampleRatios <- imFromStack(zo/sum.zo$sum)
+    }
+    
+    begin <- Q$w |> length() - length(SampleRatios[]) +1
+    end <- Q$w |> length()
+    
+    TotalArea <- Q$w[begin:end] |> sum()
+    
+    AreaWeights <- SampleRatios * TotalArea
     
     NewAreas <- Q$w[begin:end] * AreaWeights[]
     Q$w[begin:end] <- NewAreas

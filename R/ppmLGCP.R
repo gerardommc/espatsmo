@@ -15,8 +15,7 @@
 #' @param  model.bias.formula = NULL,
 #' @param  covariance.func character, specifying the name of the covariance function for the gaussian process, either "pcmatern", or "matern". Please check how these options should be configured 
 #' via the `prior.conf` argument.
-#' @param weight.bias.conf list, containing the following elements: 
-#' 1) nsim, 2) positive, 3) kernel, 4) sigma, 5) varcov, 6) weights, 7) edge
+#' @param weight.bias.conf list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge
 #' @param  prior.conf list, with two different specifications depending on the covariance function selected. 
 #' If `covariance.func = "pcmatern"`, the list must provide values for: 1) alpha = 2,
 #' 2) prior.range = c(100, 0.01), 3) prior.sigma = c(0.05, 0.01)).
@@ -50,8 +49,7 @@ ppmLGCP <- function(points = NULL,
                       model.bias = NULL,
                       model.bias.formula = NULL,
                       covariance.func = "pcmatern", #options = "matern", "pcmatern"
-                      weight.bias.conf = list(nsim = 39,
-                                              positive = TRUE, kernel = "gaussian",
+                      weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                               sigma = NULL, varcov = NULL, 
                                               weights = NULL, edge = TRUE),
                       prior.conf = list(alpha = 2,
@@ -152,8 +150,7 @@ ppmLGCP <- function(points = NULL,
       if(class(bias.data) == "data.frame"){
         Qa <- replaceQAreas(Q = Q,
                             bias.data = bias.data, 
-                            im = iml[[1]], 
-                            nsim =  weight.bias.conf$nsim,
+                            im = iml[[1]],
                             positive = weight.bias.conf$positive,
                             kernel = weight.bias.conf$kernel,
                             sigma = weight.bias.conf$sigma,
@@ -189,7 +186,6 @@ ppmLGCP <- function(points = NULL,
         Qa <- replaceQAreas(Q = Q,
                             bias.data = locs.bias, 
                             im = iml[[1]], 
-                            nsim =  weight.bias.conf$nsim,
                             positive = weight.bias.conf$positive,
                             kernel = weight.bias.conf$kernel,
                             sigma = weight.bias.conf$sigma,

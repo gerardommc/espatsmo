@@ -7,8 +7,7 @@
 #' SpatRaster or imList object containing the spatial variability of the observation effort
 #' @param bias.correction character, with values 'weights' or 'background', 
 #' specifying the method used to control the effect of sampling bias
-#' @param weight.bias.conf list, containing the following elements: 
-#' 1) nsim, 2) positive, 3) kernel, 4) sigma, 5) varcov, 6) weights, 7) edge and 8) p.keep. 
+#' @param weight.bias.conf list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge and 7) p.keep. 
 #' Where `p.keep` is relevant bias.correction if bias.correction = 'background' and specifies the proportion of
 #' pixels to be retained after thinning the covariates. For the remaining elements of the list, please consult the help files of `spatstat.explore::density.ppm`.
 #' @param parallel logical, to specify whether models will be fitted in parallel or in series. 
@@ -26,8 +25,7 @@ ppmBatchFit <- function(points= NULL,
                         formulas = NULL, 
                         bias.data = NULL, #Data frame with sampling localities or raster layer
                         bias.correction = NULL,
-                        weight.bias.conf = list(nsim = 39,
-                                                positive = TRUE, kernel = "gaussian",
+                        weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                                 sigma = NULL, varcov = NULL, 
                                                 weights = NULL, edge = TRUE,
                                                 p.keep = 0.5), #Only relevant for Background bias correction
@@ -103,7 +101,6 @@ ppmBatchFit <- function(points= NULL,
           Qa <- replaceQAreas(Q = Q,
                               bias.data = bias.data, 
                               im = imList[[1]], 
-                              nsim =  weight.bias.conf$nsim,
                               positive = weight.bias.conf$positive,
                               kernel = weight.bias.conf$kernel,
                               sigma = weight.bias.conf$sigma,
@@ -140,8 +137,7 @@ ppmBatchFit <- function(points= NULL,
           
           Qa <- replaceQAreas(Q = Q,
                               bias.data = bias.data, 
-                              im = imList[[1]], 
-                              nsim =  weight.bias.conf$nsim,
+                              im = imList[[1]],
                               positive = weight.bias.conf$positive,
                               kernel = weight.bias.conf$kernel,
                               sigma = weight.bias.conf$sigma,
