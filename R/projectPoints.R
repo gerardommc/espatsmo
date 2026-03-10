@@ -5,6 +5,16 @@
 #' @param origin.crs A character string specifying the CRS of the given point localities.
 #' @param target.crs A character string specifying the new desired CRS in which to return the given point localities.
 #' @return A two column data frame with the transformed point localities in the new CRS.
+#' @examples
+#' \dontrun{
+#' p <- read.csv("inst/extdata/points_WGS84.csv")
+#' 
+#' p.itrf <- projectPoints(lon = p$x,
+#'                         lat = p$y,
+#'                         origin.crs = "EPSG:4326",
+#'                         target.crs = "EPSG:6372")
+#' }
+#' @export
 
 projectPoints <- function(lon = NULL,
                           lat = NULL,

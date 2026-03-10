@@ -8,6 +8,16 @@
 #' @param target.crs Character string, indicating the coordinate reference system of the returned object, only used when the class of r is imList
 #' @param as.imList Logical, whether to return the object as an imList
 #' @return A SpatRaster or imList with all its values compresed between 0-1.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' 
+#' r.np <- NegPosNorm(r = r,
+#'                    target.crs = "EPSG:6372",
+#'                    as.imList = F)
+#' 
+#' }
+#' @export
 
 NegPosNorm <- function(r = NULL, 
                        target.crs = NULL,

@@ -6,6 +6,13 @@
 #' @param x A list of raster im objecs, either created with spatstat or imFromStack.
 #' @param target.crs A character string indicating the coordinate reference system for the SpatRaster to return.
 #' @return A terra package SpatRaster object with as many bands as items in the imList object.
+#' @examples
+#' \dontrun{
+#' iml <- readRDS("inst/extdata/ChelsaBio_imList.rds")
+#' 
+#' r <- as.SpatRast(x = iml,
+#'                  target.crs = "EPSG:6372")
+#' }
 #' 
 
 as.SpatRast <- function(x = NULL, 

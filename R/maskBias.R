@@ -18,6 +18,23 @@
 #' @param p.keep Numeric double in the interval 0-1, to specify the proportion of pixels that will be retained in the filtered covariates.
 #' @param as.imList Logical, whether the returned object will be an imList or SpatRaster.
 #' @return A SpatRaster or imList with the same covariates as the entered set.
+#' @examples
+#' \dontrun{
+#' 
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' maskBias <- function(covariates = r, 
+#'                      bias.data = bias,
+#'                      points = p,
+#'                      p.keep = 0.5,
+#'                      as.imList = F)
+#' 
+#' }
+#' @export
 
 maskBias <- function(covariates = NULL, 
                      bias.data = NULL,
