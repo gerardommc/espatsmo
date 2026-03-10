@@ -7,6 +7,19 @@
 #' @param respDF A data.frame containing two columns with names "Variable" and "Power", where foreach variable name in the compatibility matrix returned by findCompatibles, there should be a proposed positive integer exponent.
 #' @param compatMat A covariate compatibility matrix generated with findCompatibles.
 #' @return A character vector containing the model formulas for each row of variable cobinations in compatMat, and here each term in the formula has an exponent 1:Power.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' 
+#' compat <- findCompatibles(covariates = r,
+#'                           thres = 0.6,
+#'                           max.comb = 3)
+#' 
+#' forms <- getPolyFormulas(respDF = resp, 
+#'                          compatMat = compat)
+#' }
+#' 
 
 
 getPolyFormulas <- function(respDF = NULL, 

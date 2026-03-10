@@ -5,6 +5,15 @@
 #' @param thres Numeric positive between 0 - 1, representing the pearson correlation coefficient threshold of tolerated collinearity between covariates in each set of combinations
 #' @param max.comb Numeric integer, representing the number of covariates for the combinations.
 #' @return A data.frame with max.comb columns. The number of rows depends on the number combinations possible given the correlatin threshold specified.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' compat <- findCompatibles(covariates = r,
+#'                           thres = 0.6,
+#'                           max.comb = 3)
+#' }
+#' @export
 
 findCompatibles <- function(covariates = NULL, 
                             thres = 0.6, 
