@@ -17,6 +17,24 @@
 #' @param save.plot Logical to indicate if a plot of the responses is to be saved.
 #' @param plot.pars A list to configure plot size and file name if save.plot is TRUE.
 #' @param p.keep Numeric double in the interval 0-1, to specify the proportion of pixels that will be retained in the filtered covariates.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra:rast("inst/extdata/Target-group.tif")
+#' 
+#' plotResponses(points = p,
+#'               covariates = r,
+#'               bias.data = bias,
+#'               bias.correction = "weights",
+#'               save.plot = T,
+#'               plot.pars = list(name = "ResponsePlot", 
+#'                                width = 5, 
+#'                                height = 5)) 
+#' }
+#' @export
 
 plotResponses <- function(points = NULL,
                           covariates = NULL,

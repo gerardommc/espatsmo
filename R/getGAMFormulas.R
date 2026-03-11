@@ -6,6 +6,19 @@
 #' @param respDF A data.frame containing two columns with names "Variable" and "Smoother", where foreach variable name in the compatibility matrix returned by findCompatibles, a smoother type used by gam, is specified.If no smoother is desired for a variable, this value should be set to 1.
 #' @param compatMat A covariate compatibility matrix generated with findCompatibles.
 #' @return A character vector containing the model formulas for each row of variable cobinations in compatMat.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' resp <- read.csv("inst/extdata/Smoothers.csv")
+#' 
+#' compat <- findCompatibles(covariates = r,
+#'                           thres = 0.6,
+#'                           max.comb = 3)
+#' 
+#' forms <- getGAMFormulas(respDF = resp, 
+#'                          compatMat = compat)
+#' }
+#' @export
 
 getGAMFormulas <- function(respDF, compatMat){
   

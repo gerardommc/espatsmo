@@ -13,7 +13,7 @@
 #' r <- as.SpatRast(x = iml,
 #'                  target.crs = "EPSG:6372")
 #' }
-#' 
+#' @export
 
 as.SpatRast <- function(x = NULL, 
                         target.crs = NULL){

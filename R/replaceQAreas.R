@@ -18,6 +18,25 @@
 #' @param weights A numeric vector with the length of sampling localities with the weights for each observation.
 #' @param edge Logical, whether to perform edge correction
 #' @return A quadscheme but with modified, spatially variable area weights.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' iml <- imFromStack(r)
+#' 
+#' p.pp <- spatstat.geom::ppp(x = p$x, y = $y, window = as.owin(iml[[1]]))
+#' 
+#' Q <- spatstat.geom::pixelquad(p.pp)
+#' 
+#' QA <- replaceQareas(Q = Q,
+#'                     bias.data = bias,
+#'                     im = iml)
+#' }
+#' @export
 
 replaceQAreas <- function(Q = NULL, 
                           bias.data = NULL,

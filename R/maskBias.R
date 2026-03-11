@@ -20,7 +20,6 @@
 #' @return A SpatRaster or imList with the same covariates as the entered set.
 #' @examples
 #' \dontrun{
-#' 
 #' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
 #' 
 #' p <- read.csv("inst/extdata/points.csv")
@@ -32,7 +31,6 @@
 #'                      points = p,
 #'                      p.keep = 0.5,
 #'                      as.imList = F)
-#' 
 #' }
 #' @export
 

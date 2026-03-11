@@ -19,7 +19,7 @@
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
 #' }
-#' 
+#' @export
 
 
 getPolyFormulas <- function(respDF = NULL, 
