@@ -7,7 +7,36 @@
 #' @param batch A ppmBatch object from which to extract the "best" model, on the basis of the AIC.
 #' @param as.ppmSingle Logical, whether the returned object is a ppSingle, or spatstat.model::ppm to be handled with spatstat.
 #' @return A ppmSingle or ppm object.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
 #' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' 
+#' compat <- findCompatibles(covariates = r,
+#'                           thres = 0.6,
+#'                           max.comb = 3)
+#' 
+#' forms <- getPolyFormulas(respDF = resp, 
+#'                          compatMat = compat)
+#' models <- ppmBatchFit(points = ,
+#'                       covariates = r,
+#'                       formulas = forms,
+#'                       bias.data = bias,
+#'                       bias.correction = "weights",
+#'                       parallel = F,
+#'                       top.models = 3)
+#' 
+#' best <- batchBest(batch = models,
+#'                   as.ppmSingle = F)
+#' 
+#' spatstat.model::summary(best)
+#' }
+#' @export
 
 batchBest <- function(batch = NULL, as.ppmSingle = T){
   if(is.null(batch)){

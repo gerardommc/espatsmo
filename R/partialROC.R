@@ -8,9 +8,46 @@
 #' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)
 #' @param omission Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).
 #' @return A data.frame containing the simulated area ratios, and saves the plot of the areas and its median.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' model <- ppmBatchFit(points= p, 
+#'                      covariates = r, 
+#'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
+#'                      bias.data = bias, #Data frame with sampling localities or raster layer
+#'                      bias.correction = "weights",
+#'                      as.ppmSingle = F)
+#' 
+#' spatstat.model::summary(model)
+#' 
+#' r.im <- imFromStack(r)
+#' 
+#' pred <- spatstat.model::predict(model, covariates = r.im, localities = r.im) |> terra::rast()
+#' 
+#' valid.points <- read.csv("inst/extdata/Valid_points.csv")
+#' 
+#' proc <- partialROC(raster = pred,
+#'                    points = valid.points,
+#'                    plot.pars = list(name = "inst/extdata/PartialROC.pdf", 
+#'                                     width = 5, 
+#'                                     height = 5))
+#' 
+#' }
+#' @export
 
-partialROC <- function(raster, points, p.points = 0.5, iterations = 39,
-                       buf = NULL, omission = 0, save.pdf = T, pdf.name = "PartialROC"){
+partialROC <- function(raster, 
+                       points, 
+                       p.points = 0.5, 
+                       iterations = 39,
+                       buf = NULL, 
+                       omission = 0, 
+                       save.plot = T, 
+                       plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)){
   
   if(!is.null(buf)){
     p <- terra::vect(as.matrix(points[, -3]))
@@ -88,8 +125,8 @@ partialROC <- function(raster, points, p.points = 0.5, iterations = 39,
   rat <- round(mean(areas$PartialROC), 2)
   P <- with(areas, length(which(PartialROC < 1))/iterations)
   
-  if(save.pdf){
-  pdf(paste0(pdf.name, ".pdf"), width = 5, height = 5)
+  if(save.plot){
+  pdf(paste0(plot.pars$name), width = plot.pars$width, height = plot.pars$height)
     plot(area.pred, colMeans(mp), xlab = "% Area predicted", 
          ylab = "1 - Omission error", col = "grey95", type = "l", 
          xlim = c(0, 1), ylim = c(0, 1), main = paste0("AUC ratio = ", rat, "\n P = ", P))

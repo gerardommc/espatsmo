@@ -37,33 +37,49 @@
 #' @param  at.locs logical, so specify whether the mesh projector vetices wil be located at background background points.
 #' @param  inla.mode character, to specify whether the "experimental" of NULL model will be used
 #' @return list of class `ppmLGCP` containing the fitted model, call, mesh and predictions for fixed and random effects.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' model <- ppmLGCP(points= p, 
+#'                  covariates = r, 
+#'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
+#'                  bias.data = bias,
+#'                  bias.correction = "weights",
+#'                  as.ppmSingle = F)
+#' 
+#' summary(model)
+#' }
+#' @export
 
 ppmLGCP <- function(points = NULL,
-                      covariates = NULL,
-                      formula = NULL,
-                      offset = NULL,
-                      no.bkgd = 5000,
-                      group.bins = 40,
-                      bias.data = NULL,
-                      bias.correction = NULL, #options = "background", "weights"
-                      model.bias = NULL,
-                      model.bias.formula = NULL,
-                      covariance.func = "pcmatern", #options = "matern", "pcmatern"
-                      weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
-                                              sigma = NULL, varcov = NULL, 
-                                              weights = NULL, edge = TRUE),
-                      prior.conf = list(alpha = 2,
-                                        prior.range = c(100, 0.01),
-                                        prior.sigma = c(0.05, 0.01)),
-                      mesh.par = list(edge = 50, offset = 50), # for the diistance between points in the spde, units are x the grain size in raster layers
-                      coordinates = "metres", #the alternative is metres
-                      dist.units = "km", #the alternative is "m" for metres
-                      weight.units = "km",
-                      verbose = T,
-                      at.locs = T,
-                      inla.mode = "experimental"){
-  
-  #require(terra)
+                    covariates = NULL,
+                    formula = NULL,
+                    offset = NULL,
+                    no.bkgd = 5000,
+                    group.bins = 40,
+                    bias.data = NULL,
+                    bias.correction = NULL, #options = "background", "weights"
+                    model.bias = NULL,
+                    model.bias.formula = NULL,
+                    covariance.func = "pcmatern", #options = "matern", "pcmatern"
+                    weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
+                                            sigma = NULL, varcov = NULL, 
+                                            weights = NULL, edge = TRUE),
+                    prior.conf = list(alpha = 2,
+                                      prior.range = c(10000, 0.01),
+                                      prior.sigma = c(0.05, 0.01)),
+                    mesh.par = list(edge = 50, offset = 50), # for the diistance between points in the spde, units are x the grain size in raster layers
+                    coordinates = "metres", #the alternative is metres
+                    dist.units = "km", #the alternative is "m" for metres
+                    weight.units = "km",
+                    verbose = T,
+                    at.locs = T,
+                    inla.mode = "experimental"){
   
   INLA::inla.setOption(inla.mode = inla.mode)
 

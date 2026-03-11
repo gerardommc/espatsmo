@@ -52,6 +52,8 @@ getPolyFormulas <- function(respDF = NULL,
     }
     return(f1)
   }
+
+  class(formulas) <- "polyforms"
   
   return(formulas) 
 }

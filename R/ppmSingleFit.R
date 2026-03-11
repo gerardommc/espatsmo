@@ -14,15 +14,33 @@
 #' 4) method, 5) forcefit, 6) improve.type, 7) improve.args, 8) prior.mean, 9) prior.var. Plase consult the help files for
 #' `spatstat.model:ppm`
 #' @return A list of class `ppmSingle` containing the specified number of models to bee returned and the configuration of the call.
-
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' model <- ppmBatchFit(points= p, 
+#'                      covariates = r, 
+#'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
+#'                      bias.data = bias, #Data frame with sampling localities or raster layer
+#'                      bias.correction = "weights",
+#'                      as.ppmSingle = F)
+#' 
+#' spatstat.model::summary(model)
+#' }
+#' @export
 
 
 ppmSingleFit <- function(points= NULL, 
-                covariates = NULL, 
-                formula = NULL, 
-                bias.data = NULL, #Data frame with sampling localities or raster layer
-                bias.correction = NULL,
-                weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
+                         covariates = NULL, 
+                         formula = NULL, 
+                         bias.data = NULL, #Data frame with sampling localities or raster layer
+                         bias.correction = NULL,
+                         as.ppmSingle = T,
+                         weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                         sigma = NULL, varcov = NULL,
                                         weights = NULL, edge = TRUE ,
                                         p.keep = 0.5),
@@ -159,12 +177,15 @@ ppmSingleFit <- function(points= NULL,
                            prior.mean = ppm.conf$prior.mean,
                            prior.var = ppm.conf$prior.var)
   
-  ret.list <- list(model = m,
+  if(as.ppmSingle){
+        ret.list <- list(model = m,
                    call = list(bias.data = bias.data, #Data frame with sampling localities or raster layer
                                bias.correction = bias.correction,
                                weight.bias.conf = weight.bias.conf))
+        class(ret.list) <- "ppmSingle"
   
-  class(ret.list) <- "ppmSingle"
-  
-  return(ret.list)
+        return(ret.list)
+  } else {
+    return(m)
+  }
 }

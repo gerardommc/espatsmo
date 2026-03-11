@@ -18,6 +18,31 @@
 #' 4) method, 5) forcefit, 6) improve.type, 7) improve.args, 8) prior.mean, 9) prior.var. Plase consult the help files for
 #' `spatstat.model:ppm`
 #' @return A list of class `ppmBatch` containing the specified number of models to bee returned and the configuration of the call.
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' 
+#' compat <- findCompatibles(covariates = r,
+#'                           thres = 0.6,
+#'                           max.comb = 3)
+#' 
+#' forms <- getPolyFormulas(respDF = resp, 
+#'                          compatMat = compat)
+#' models <- ppmBatchFit(points = ,
+#'                       covariates = r,
+#'                       formulas = forms,
+#'                       bias.data = bias,
+#'                       bias.correction = "weights",
+#'                       parallel = F,
+#'                       top.models = 3)
+#' }
+#' @export
 
 
 ppmBatchFit <- function(points= NULL, 
@@ -45,6 +70,8 @@ ppmBatchFit <- function(points= NULL,
     if(length(formulas) == 1){
       stop("ppmBatchFit requires more than 1 formula, please use ppmSingleFit")
     }
+  
+    if(class(formulas) == "gamforms"){ppm.conf$use.gam <- TRUE}
     
     #Methods for bias correction
     if(!is.null(bias.correction)){

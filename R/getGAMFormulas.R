@@ -37,6 +37,8 @@ getGAMFormulas <- function(respDF, compatMat){
     return(f1)
   }
 
+  class(formulas) <- "gamforms"
+
   return(formulas) 
 }
 
