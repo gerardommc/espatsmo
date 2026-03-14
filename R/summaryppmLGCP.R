@@ -1,6 +1,8 @@
-#'@title Generate summaries from model objects
-#'@description These functions require a range of inputs depending on the class of the supplied
+#' @title Generate summaries from model objects
+#' @description These functions require a range of inputs depending on the class of the supplied
 #' objects. For objects of class ppmLGCP, the summary is for either fixed or random effects
+#' @param object A model fitted with ppmLGCP
+#' @param effects A character string specifying whether to print `fixed` or `random` effects or both
 #' @examples
 #' \dontrun{
 #' r <- terra::rast("inst/extdata/ChelsaBio.tif")
@@ -22,20 +24,20 @@
 #' @method summary ppmLGCP
 
 
-summary.ppmLGCP <- function(model = NULL, effects = NULL){
+summary.ppmLGCP <- function(object = NULL, effects = NULL){
   if(is.null(effects)){
-    pl <- list(`Fixed effects` = model$model$summary.fixed,
-               `Random effects` = m$model$summary.hyperpar)
+    pl <- list(`Fixed effects` = object$model$summary.fixed,
+               `Random effects` = object$model$summary.hyperpar)
     print(pl, quote = F)
   }
   
   if(!is.null(effects)){
       if(effects == "fixed"){
-          print(model$model$summary.fixed, quote = F)
+          print(object$model$summary.fixed, quote = F)
       }
       
       if(effects == "random"){
-          print(model$model$summary.hyperpar, quote = F)
+          print(object$model$summary.hyperpar, quote = F)
       }
     }
 }

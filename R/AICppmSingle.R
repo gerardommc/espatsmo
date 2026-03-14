@@ -1,8 +1,8 @@
-#' @title Generate summaries from model objects
-#' @description These functions require a range of inputs depending on the class of the supplied
-#' objects. For objects of class ppmSingle, if the argument as.ppmSingle = T, otherwise 
-#' summary will call spatstat.model::summary.ppm
-#' @param object A model fitted with ppmSingle
+#' @title Compute and print the AIC of single or batch point process models
+#' @description
+#' Print the Akaike information criterion of a point process models fitted with spatstat's ppm, but via the inteface of the presente package.
+#' @param object A ppmSingle, fitted with the corresponding function
+#' @return The function returns the Akaike Information Criterion, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
 #' @examples
 #' \dontrun{
 #' r <- terra::rast("inst/extdata/ChelsaBio.tif")
@@ -18,13 +18,14 @@
 #'                      bias.correction = "weights",
 #'                      as.ppmSingle = F)
 #' 
-#' summary(model)
+#' AIC(model)
 #' }
 #' @export
-#' @method summary ppmSingle
+#' @method AIC ppmSingle
 
-summary.ppmSingle <- function(object = NULL){
-  spatstat.model::summary.ppm(object = object$model)
+
+AIC.ppmSingle <- function(object){
+  spatstat.model::AIC.ppm(object)
 }
 
 

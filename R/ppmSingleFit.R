@@ -1,5 +1,6 @@
-#' @title Fit one single point process model
-#' @description 
+#' @title Fit a point process model
+#' @description The espatsmo interface to fit one point process model with spatstat but using generic raster and data.frame 
+#' objects as inputs.
 #' @param points A two-clumn data.frame, ppp or quad object containing the presence localities 
 #' @param covariates A SpatRaster or imList containing the environmental covariates 
 #' @param formula A character vector containing formula to be fitted. 
@@ -10,9 +11,10 @@
 #' @param weight.bias.conf list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge and 7) p.keep. 
 #' Where `p.keep` is relevant bias.correction if bias.correction = 'background' and specifies the proportion of
 #' pixels to be retained after thinning the covariates. For the remaining elements of the list, please consult the help files of `spatstat.explore::density.ppm`.
-#' @param ppm.conf list, containing the elemens to configure `spatstat.model:ppm`: 1) na.action, 2) correction, 3) use.gam=FALSE,
-#' 4) method, 5) forcefit, 6) improve.type, 7) improve.args, 8) prior.mean, 9) prior.var. Plase consult the help files for
+#' @param ppm.conf list, containing the elemens to configure `spatstat.model:ppm`: 1) correction, 2) use.gam=FALSE,
+#' 3) method, 4) forcefit, 5) improve.type, 6) improve.args, 7) prior.mean, 8) prior.var. Plase consult the help files for
 #' `spatstat.model:ppm`
+#' @param as.ppmSingle logical, whether to return a ppmSingle class object or a spatstat ppm model.
 #' @return A list of class `ppmSingle` containing the specified number of models to bee returned and the configuration of the call.
 #' @examples
 #' \dontrun{
@@ -42,8 +44,7 @@ ppmSingleFit <- function(points= NULL,
                                         sigma = NULL, varcov = NULL,
                                         weights = NULL, edge = TRUE ,
                                         p.keep = 0.5),
-                ppm.conf = list(na.action = na.exclude,
-                                correction="border",
+                ppm.conf = list(correction="border",
                                 use.gam=FALSE,
                                 method="logi",
                                 forcefit=FALSE,
@@ -80,22 +81,22 @@ ppmSingleFit <- function(points= NULL,
       
       w <- spatstat.geom::as.owin(imList[[1]])
       
-      if(class(points) == "data.frame"){
+      if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
       } 
       
-      if(class(points) == "ppp") {
+      if(inherits(points, "ppp")) {
         Q <- spatstat.geom::pixelquad(points)
       }
 
-      if(class(points) == "quad"){
+      if(inherits(points, "quad")){
         Q <- points
       }
     }
     
     if(bias.correction == "weights"){
-      if(class(bias.data) == "data.frame"){
+      if(inherits(bias.data, "data.frame")){
 
         imList <- imFromStack(covariates)
         Qa <- replaceQAreas(Q = Q,
@@ -110,7 +111,7 @@ ppmSingleFit <- function(points= NULL,
         Q <- Qa
       }
       
-      if(class(bias.data) == "SpatRaster"){
+      if(inherits(bias.data, "SpatRaster")){
         
         imList <- imFromStack(covariates)
         
@@ -138,34 +139,33 @@ ppmSingleFit <- function(points= NULL,
   
   if(is.null(bias.correction)){
 
-    if(class(covariates) == "SpatRaster"){
+    if(inherits(covariates, "SpatRaster")){
       imList <- imFromStack(covariates)
-      w <- spatstat::as.owin(imList[[1]])
+      w <- spatstat.geom::as.owin(imList[[1]])
     } 
     
-    if(class(covariates) == "imList"){
+    if(inherits(covariates, "imList")){
       imList <- covariates
-      w <- spatstat::as.owin(imList[[1]])
+      w <- spatstat.geom::as.owin(imList[[1]])
     }
     
-    if(class(points) == "data.frame"){
-      pp <- spatstat::ppp(x = points$x, y = points$y, window = w)
-      Q <- spatstat::pixelquad(pp)
+    if(inherits(points, "data.frame")){
+      pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+      Q <- spatstat.geom::pixelquad(pp)
     }
     
-    if(class(points) == "ppp"){
-      Q <- spatstat::pixelquad(points)
+    if(inherits(points, "ppp")){
+      Q <- spatstat.geom::pixelquad(points)
     }  
 
-    if(class(points) == "quad"){
+    if(inherits(points, "quad")){
       Q <- points
     } 
   }
   
   m <- spatstat.model::ppm(Q, 
-                           trend = as.formula(formula[i]), 
+                           trend = stats::as.formula(formula[i]), 
                            covariates = imList,
-                           na.action = ppm.conf$na.action,
                            correction = ppm.conf$correction,
                            use.gam = ppm.conf$use.gam,
                            method = ppm.conf$method,

@@ -24,7 +24,7 @@ projectPoints <- function(lon = NULL,
   if(is.null(target.crs)){stop("Please provide a valid target CRS")}
   
   v <- data.frame(lon = lon, lat = lat) |> terra::vect()
-  crs(v) <- origin.crs
+  terra::crs(v) <- origin.crs
   
   vp <- terra::project(v, target.crs) |> terra::crds() |> data.frame()
   

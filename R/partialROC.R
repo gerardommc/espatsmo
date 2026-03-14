@@ -4,9 +4,10 @@
 #' @param points A two-column data frame where the first two columns have to be the x and y coordinates respectively
 #' @param p.points Numeric, double representing the proportion of validation points used in each iteration
 #' @param iterations Numeric, integer the number of times the random sampling is repeated
-#' @param pdf.name = Name of the file to save a graph of all the curves
 #' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)
 #' @param omission Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).
+#' @param save.plot Logical, to indicate whether to sace a pdf file of the simulated PartialROC analysis
+#' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
 #' @return A data.frame containing the simulated area ratios, and saves the plot of the areas and its median.
 #' @examples
 #' \dontrun{
@@ -62,7 +63,7 @@ partialROC <- function(raster,
   
   if(omission > 0){
     vals <- terra::extract(raster, points[, 1:2])[,2]
-    q <- quantile(vals, 1-omission, na.rm = T)
+    q <- stats::quantile(vals, 1-omission, na.rm = T)
     om.r <- raster < q
     om.r <- terra::classify(om.r, rcl = matrix(c(-Inf, 0, NA), ncol = 3, byrow = T))
     raster <- terra::mask(raster, om.r)
@@ -126,18 +127,18 @@ partialROC <- function(raster,
   P <- with(areas, length(which(PartialROC < 1))/iterations)
   
   if(save.plot){
-  pdf(paste0(plot.pars$name), width = plot.pars$width, height = plot.pars$height)
+  grDevices::pdf(paste0(plot.pars$name), width = plot.pars$width, height = plot.pars$height)
     plot(area.pred, colMeans(mp), xlab = "% Area predicted", 
          ylab = "1 - Omission error", col = "grey95", type = "l", 
          xlim = c(0, 1), ylim = c(0, 1), main = paste0("AUC ratio = ", rat, "\n P = ", P))
-    lines(area.pred, colMeans(mr), col = "grey95", lty = 2, type = "l")
+    graphics::lines(area.pred, colMeans(mr), col = "grey95", lty = 2, type = "l")
     for(j in 1:iterations){
-      lines(area.pred, mp[j, ], col = "grey95", lwd = 0.25, type = "l")
-      lines(area.pred, mr[j, ], col = "grey95", lty = 2, lwd = 0.25, type = "l")
+      graphics::lines(area.pred, mp[j, ], col = "grey95", lwd = 0.25, type = "l")
+      graphics::lines(area.pred, mr[j, ], col = "grey95", lty = 2, lwd = 0.25, type = "l")
     }
-    lines(area.pred, colMeans(mp, na.rm = T), col = "red", lwd = 1.5, type = "s")
-    lines(area.pred, colMeans(mr, na.rm = T), type = "s")
-  dev.off()
+    graphics::lines(area.pred, colMeans(mp, na.rm = T), col = "red", lwd = 1.5, type = "s")
+    graphics::lines(area.pred, colMeans(mr, na.rm = T), type = "s")
+  grDevices::dev.off()
 }
 
   

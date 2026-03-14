@@ -26,11 +26,11 @@ ZeroOneNorm <- function(r = NULL,
     stop("Please provide a valid SpatRaster or imList")
   }
 
-  if(class(r) == "imList"){
+  if(inherits(r, "imList")){
     r <- as.SpatRast(r)
   }
 
-  if(class(r) == "im"){
+  if(inherits(r, "im")){
     r <- terra::rast(r)
   }
 
@@ -39,8 +39,8 @@ ZeroOneNorm <- function(r = NULL,
   r.norm <- (r - mi)/(ma - mi)
 
   if(!as.imList){
-    if(class(r) == "imList" | class(r) == "im"){
-      crs(r.norm) <- target.crs
+    if(inherits(r, "imList") | inherits(r, "im")){
+      terra::crs(r.norm) <- target.crs
     }
     return(r.norm)
   }

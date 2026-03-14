@@ -1,8 +1,8 @@
-#' @title Generate summaries from model objects
-#' @description These functions require a range of inputs depending on the class of the supplied
-#' objects. For objects of class ppmBatch, the summary is for the id models contained in the list of fitted models
-#' @param object A batch of point process models fitted with ppmBatchFit
-#' @param id The id of the model(s) to print the summary.
+#' @title Compute and print the AIC of a batch of point process models
+#' @description
+#' Print the Akaike information criterion of one or multiple point proces models fitted with spatstat's ppm, but via the inteface of the presente package.@
+#' @param object A ppmBatch object produced by ppmBatchFit
+#' @return The function returns the Akaike Information Criterion, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
 #' @examples
 #' \dontrun{
 #' r <- terra::rast("inst/extdata/ChelsaBio.tif")
@@ -28,14 +28,13 @@
 #'                       parallel = F,
 #'                       top.models = 3)
 #' 
-#' summary(models, id = 2)
+#' AIC(models)
 #' }
 #' @export
-#' @method summary ppmBatch
+#' @method AIC ppmBatch
 
-
-summary.ppmBatch <- function(object = NULL, id = NULL){
-  spatstat.model::summary.ppm(object = object$models[[id]])
+AIC.ppmBatch <- function(object){
+  sapply(object$models, spatstat.model::AIC.ppm) |> print(quote = F)
 }
 
 

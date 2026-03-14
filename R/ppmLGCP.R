@@ -89,11 +89,11 @@ ppmLGCP <- function(points = NULL,
     stop("Please provide a set of points as a two column data.frame with names \"x\" and \"y\", or a valid ppp or quad object")
   }
   
-  if(class(points) == "ppp"){
+  if(inherits(points, "ppp")){
     points <- data.frame(x = points$x, y = points$y)
   }
 
-  if(class(points) == "quad"){
+  if(inherits(points, "quad")){
     points <- data.frame(x = points$data$x, y = points$data$y)
   }
   
@@ -161,7 +161,7 @@ ppmLGCP <- function(points = NULL,
     #Background data with bias correction
     #Bias correction based on are weights
     if(bias.correction == "weights"){
-      if(class(bias.data) == "data.frame"){
+      if(inherits(bias.data, "data.frame")){
         Qa <- replaceQAreas(Q = Q,
                             bias.data = bias.data, 
                             im = iml[[1]],
@@ -187,7 +187,7 @@ ppmLGCP <- function(points = NULL,
         wei <- wei[!nas]
       }
       
-      if(class(bias.data) == "SpatRaster"){
+      if(inherits(bias.data, "SpatRaster")){
         
         bias.data <- terra::resample(bias.data, covariates[[1]]) |> ZeroOneNorm()
         
@@ -227,7 +227,7 @@ ppmLGCP <- function(points = NULL,
     
     #Bias correction based on location of  background data
     if(bias.correction == "background"){
-      if(class(bias.data) == "data.frame"){
+      if(inherits(bias.data, "data.frame")){
         bias.ppp <- spatstat.geom::ppp(x = bias.data$x, y = bias.data$y, window = win)
         dens.r <- spatstat.explore::density.ppp(bias.ppp, 
                               positive = weight.bias.conf$positive,
@@ -250,7 +250,7 @@ ppmLGCP <- function(points = NULL,
         
       }
       
-      if(class(bias.data) == "SpatRaster"){
+      if(inherits(bias.data, "SpatRaster")){
         bias.data <- terra::resample(bias.data, covariates[[1]]) |> ZeroOneNorm()
         
         bias.df <- as.data.frame(bias.data, xy = TRUE)
@@ -281,7 +281,7 @@ ppmLGCP <- function(points = NULL,
   }
   
   #Creating spde mesh
-  w.mesh <- ifelse(length(wei) == 1, wei, median(wei, na.rm = T))
+  w.mesh <- ifelse(length(wei) == 1, wei, stats::median(wei, na.rm = T))
   
   hull <- INLA::inla.nonconvex.hull(cov.df[, c("x", "y")] |> as.matrix())
   
@@ -349,7 +349,7 @@ ppmLGCP <- function(points = NULL,
   gc(reset = T)
 
   points.v <- data.frame(lon = points$x, lat = points$y) |> terra::vect()
-    crs(points.v) <- terra::crs(covariates)
+    terra::crs(points.v) <- terra::crs(covariates)
 
   points.r <- terra::rasterize(points.v, covariates, fun = "count")
   points.df <- as.data.frame(points.r, xy = T)
@@ -365,8 +365,8 @@ ppmLGCP <- function(points = NULL,
   if(covariance.func == "matern"){
     spde <- INLA::inla.spde2.matern(mesh, 
                                     alpha = prior.conf$alpha,
-                                    B.tau = B.tau,
-                                    B.kappa = B.kappa, 
+                                    B.tau = prior.conf$B.tau,
+                                    B.kappa = prior.conf$B.kappa, 
                                     theta.prior.mean = prior.conf$theta.prior.mean,
                                     theta.prior.prec = prior.conf$theta.prior.prec)
   }
@@ -393,7 +393,7 @@ ppmLGCP <- function(points = NULL,
   A_quad <- INLA::inla.spde.make.A(mesh, loc = quad.sp)
   
   #Predictors matrix
-  covs.df <- as.data.frame(covariates, xy = T) |> na.omit()
+  covs.df <- as.data.frame(covariates, xy = T) |> stats::na.omit()
   if(dist.units == "km" & coordinates == "metres"){
     bkgd.dist <- terra::distance(points.r, method = "geo", unit = "m") / 1000
   } else {
@@ -417,9 +417,9 @@ ppmLGCP <- function(points = NULL,
     } #Revisar cómo evitar que dist esté en los efectos fijos
   }
   
-  sp.mm <- model.matrix(formula(final.form), presence.df) |> data.frame()
-  quad.mm <- model.matrix(formula(final.form), quad.data) |> data.frame()
-  pred.mm <- model.matrix(formula(final.form), covs.df) |> data.frame()
+  sp.mm <- stats::model.matrix(formula(final.form), presence.df) |> data.frame()
+  quad.mm <- stats::model.matrix(formula(final.form), quad.data) |> data.frame()
+  pred.mm <- stats::model.matrix(formula(final.form), covs.df) |> data.frame()
   
   if(!is.null(model.bias)){
     covs.df$model.bias <- 0
@@ -469,21 +469,21 @@ ppmLGCP <- function(points = NULL,
     which.offset <- which(names(sp.mm) == offset)
     if(length(offset) == 1){
       formula.inla <- paste0("y ~ 0 + ", paste(names(sp.mm)[-c(which.dist, which.offset)], collapse = " + "), paste0(" + offset(log(", offset,"))"), " + f(inla.group(dist, n = ", group.bins, ", method = \"quantile\"), 
-                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)")  |> as.formula()
+                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)")  |> stats::as.formula()
     }else{
       formula.inla <- paste0("y ~ 0 + ", paste(names(sp.mm)[-c(which.dist, which.offset)], collapse = " + "), " + ", paste(paste0("offset(log(", offset,"))"), collapse = " + "), " + f(inla.group(dist, n =", group.bins, ", method = \"quantile\"), 
-                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)") |> as.formula()
+                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)") |> stats::as.formula()
     }
   }else{
     formula.inla <- paste0("y ~ 0 + ", paste(names(sp.mm)[-which.dist], collapse = " + "), " + f(inla.group(dist, n = ", group.bins, ", method = \"quantile\"), 
-                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)") |> as.formula()
+                   model = \"rw1\", scale.model = TRUE) + f(i, model = spde)") |> stats::as.formula()
   }
   
   data.stack <- INLA::inla.stack.data(stack.all)
   fit <- INLA::inla(formula = formula.inla,
                     family = "poisson",
                     data = data.stack,
-                    control.predictor = list(A = inla.stack.A(stack.all), compute = TRUE),
+                    control.predictor = list(A = INLA::inla.stack.A(stack.all), compute = TRUE),
                     E = data.stack$e, control.compute = list(dic = TRUE),
                     control.fixed = list(expand.factor.strategy = "inla"),
                     verbose = verbose)
@@ -496,7 +496,7 @@ ppmLGCP <- function(points = NULL,
   model.preds.r <- terra::rast(data.frame(covs.df[, c("x", "y")], model.preds))
   
   #Model predictions without spatial effects and offsets
-  mm.pred <- model.matrix(as.formula(formula), covs.df)
+  mm.pred <- stats::model.matrix(stats::as.formula(formula), covs.df)
   preds.mean <- apply(mm.pred, 1, function(x){
     sum(x * fit$summary.fixed$mean)
   })

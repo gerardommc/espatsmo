@@ -50,22 +50,22 @@ plotResponses <- function(points = NULL,
   
   if(is.null(bias.correction)){
 
-    if(class(covariates) == "SpatRaster"){
+    if(inherits(covariates, "SpatRaster")){
       imList <- imFromStack(covariates)
       w <- spatstat.geom::as.owin(imList[[1]])
     }
 
-    if(class(covariates) == "imList"){
+    if(inherits(covariates, "imList")){
       imList <- covariates
       w <- spatstat.geom::as.owin(imList[[1]])
     }
 
-    if(class(points) == "data.frame"){
+    if(inherits(points, "data.frame")){
       pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
       Q <- spatstat.geom::pixelquad(pp)
     }
 
-    if(class(points) == "ppp"){
+    if(inherits(points, "ppp")){
       Q <- spatstat.geom::pixelquad(pp)
     }
   }
@@ -73,22 +73,22 @@ plotResponses <- function(points = NULL,
   if(!is.null(bias.correction)){
     if(bias.correction == "weights"){
 
-      if(class(covariates) == "imList"){
+      if(inherits(covariates, "imList")){
         imList <- covariates
         w <- spatstat.geom::as.owin(imList[[1]])
       }
 
-      if(class(covariates) == "SpatRaster"){
+      if(inherits(covariates, "SpatRaster")){
         imList <- imFromStack(covariates)
         w <- spatstat.geom::as.owin(imList[[1]])
       }
 
-      if(class(points) == "data.frame"){
+      if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
       }
   
-      if(class(points) == "ppp"){
+      if(inherits(points, "ppp")){
         Q <- spatstat.geom::pixelquad(pp)
       }
 
@@ -127,17 +127,17 @@ plotResponses <- function(points = NULL,
         
       w <- spatstat.geom::as.owin(imList[[1]])
       
-      if(class(points) == "data.frame"){
+      if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
       }
       
-      if(class(points) == "ppp"){
+      if(inherits(points, "ppp")){
         pp <- points
         Q <- spatstat.geom::pixelquad(pp)
       }
         
-      if(class(points) == "quad"){
+      if(inherits(points, "quad")){
         pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$y, window = w)
         Q <- points
       }
@@ -145,11 +145,11 @@ plotResponses <- function(points = NULL,
   }
   
   if(save.plot){
-    pdf(plot.pars$name, width = plot.pars$width, height = plot.pars$height)
+    grDevices::pdf(plot.pars$name, width = plot.pars$width, height = plot.pars$height)
     for(i in seq_along(imList)){
       spatstat.explore::rhohat(Q, covariate = imList[[i]]) |> plot(main = names(imList)[i])
     }
-    dev.off()
+    grDevices::dev.off()
   }else{
     for(i in seq_along(imList)){
       spatstat.explore::rhohat(Q, covariate = imList[[i]]) |> plot(main = names(imList)[i])

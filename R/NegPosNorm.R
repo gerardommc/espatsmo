@@ -23,12 +23,12 @@ NegPosNorm <- function(r = NULL,
                        target.crs = NULL,
                        as.imList = F){
 
-  if(class(r) == "imList"){
+  if(inherits(r, "imList")){
     r <- as.SpatRast(r)
-    crs(r) <- target.crs
+    terra::crs(r) <- target.crs
   }
 
-  if(class(r) != "SpatRaster"){
+  if(!inherits(r, "SpatRaster")){
     stop("Cannot normalise with the supplied object, please provide a SpatRaster")
   }
 

@@ -27,32 +27,32 @@ findCompatibles <- function(covariates = NULL,
     stop(paste0("Cannot compute compatibilities with a ", class(covariates), " please provide either a multi-band SpatRaster, data.frame or imList containing only continuous variables"))
   }
 
-  if(class(covariates) == "SpatRaster" & dim(covariates)[3] < 3){
+  if(inherits(covariates, "SpatRaster") & dim(covariates)[3] < 3){
     stop("Cannot compute compatibilities with less than three variables, please provide at least three covariates")
   }
 
-  if(class(covariates) == "data.frame" & ncol(covariates) < 3){
+  if(inherits(covariates, "data.frame") & ncol(covariates) < 3){
     stop("Cannot compute compatibilities with less than three variables, please provide at least three covariates")
   }
 
-  if(class(covariates) == "imList" & length(covariates) < 3){
+  if(inherits(covariates, "imList") & length(covariates) < 3){
     stop("Cannot compute compatibilities with less than three variables, please provide at least three covariates")
   } 
 
-  if(class(covariates) == "SpatRaster"){
-    rdf <- as.data.frame(covariates, xy = F) |> na.omit()
+  if(inherits(covariates, "SpatRaster")){
+    rdf <- as.data.frame(covariates, xy = F) |> stats::na.omit()
   }
 
-  if(class(covariates) == "data.frame"){
+  if(inherits(covariates, "data.frame")){
     rdf <- covariates 
   }
 
-  if(class(covariates) == "imList"){
+  if(inherits(covariates, "imList")){
     r <- as.SpatRast(covariates)
     rdf <- as.data.frame(r, xy = F)
   }
 
-  cormat <- cor(rdf)
+  cormat <- stats::cor(rdf)
 
   lt <- lower.tri(cormat)
 
@@ -64,7 +64,7 @@ findCompatibles <- function(covariates = NULL,
 
   n <- names(rdf)
 
-  combs <- combn(n, max.comb)
+  combs <- utils::combn(n, max.comb)
 
   ref.size <- diag(max.comb) |> lower.tri() |> sum()
 

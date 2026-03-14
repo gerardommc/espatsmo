@@ -47,28 +47,28 @@ maskBias <- function(covariates = NULL,
     stop("Cannot filter null data, please provide a sample SpatRaster, bias data and presence points")
   }
   
-  if(class(covariates) == "SpatRaster"){
+  if(inherits(covariates, "SpatRaster")){
     imList <- imFromStack(covariates)
     w <- spatstat.geom::as.owin(imList[[1]])
   }
   
-  if(class(covariates) == "imList"){
+  if(inherits(covariates, "imList")){
     imList <- covariates
     w <- spatstat.geom::as.owin(imList[[1]])
   }
 
-  if(!class(bias.data) == "SpatRaster"){
-    if(class(bias.data) == "data.frame"){
+  if(!inherits(bias.data, "SpatRaster")){
+    if(inherits(bias.data, "data.frame")){
       pp <- spatstat.geom::ppp(x = bias.data$x, y = bias.data$y, window = w)
       Q <- spatstat.geom::pixelquad(pp)
     } 
     
-   if(class(bias.data) == "ppp"){
+   if(inherits(bias.data, "ppp")){
       pp <- bias.data
       Q <- spatstat.geom::pixelquad(pp)
     }
 
-    if(class(bias.data) == "quad"){
+    if(inherits(bias.data, "quad")){
       pp <- spatstat.geom::ppp(x = bias.data$data$x, y = bias.data$data$y, window = w)
       Q <- bias.data
     }
@@ -82,11 +82,11 @@ maskBias <- function(covariates = NULL,
     bias.layer.r <- terra::rast(bias.layer) |> ZeroOneNorm()
   }
   
-  if(class(bias.data) == "imList"){
+  if(inherits(bias.data, "imList")){
     bias.layer.r <- terra::rast(bias.data)
   }
   
-  if(class(bias.data) == "SpatRaster"){
+  if(inherits(bias.data, "SpatRaster")){
     bias.layer.r <- bias.data
   }
   
@@ -96,11 +96,11 @@ maskBias <- function(covariates = NULL,
                  size = p.keep*nrow(bias.df), 
                  replace = F, prob = bias.df[, 3]) |> sort()
   
-  if(class(points) == "ppp"){
+  if(inherits(points, "ppp")){
     points <- data.frame(x = points$x, y = points$y)
   }
 
-  if(class(points) == "quad"){
+  if(inherits(points, "quad")){
     points <- data.frame(x = points$data$x, y = points$data$y)
   }
   

@@ -22,19 +22,19 @@ as.SpatRast <- function(x = NULL,
     stop("Please provide an imList or im object")
   }
 
-  if(class(x) == "imList"){
+  if(inherits(x, "imList")){
     r <- terra::rast(x[[1]])
     for(i in 2:length(x)){
       r <- c(r, x[[i]])
     }
     
-    crs(r) <- target.crs
+    terra::crs(r) <- target.crs
     return(r)
   }
 
-  if(class(x) == "im"){
+  if(inherits(x, "im")){
     r <- terra::rast(x)
-    crs(r) <- target.crs
+    terra::crs(r) <- target.crs
     return(r)
   }
 }

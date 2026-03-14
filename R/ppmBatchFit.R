@@ -14,8 +14,8 @@
 #' If TRUE, the doParallel package should be installed.
 #' @param cores numeric integer, used to specify the number threads if parallel = TRUE 
 #' @param top.models numeric integer, used to specify the number of fitted models to return on the basis of the AIC.
-#' @param ppm.conf list, containing the elemens to configure `spatstat.model:ppm`: 1) na.action, 2) correction, 3) use.gam=FALSE,
-#' 4) method, 5) forcefit, 6) improve.type, 7) improve.args, 8) prior.mean, 9) prior.var. Plase consult the help files for
+#' @param ppm.conf list, containing the elemens to configure `spatstat.model:ppm`: 1) correction, 2) use.gam=FALSE,
+#' 3) method, 4) forcefit, 5) improve.type, 6) improve.args, 7) prior.mean, 8) prior.var. Plase consult the help files for
 #' `spatstat.model:ppm`
 #' @return A list of class `ppmBatch` containing the specified number of models to bee returned and the configuration of the call.
 #' @examples
@@ -57,8 +57,7 @@ ppmBatchFit <- function(points= NULL,
                         parallel = T, 
                         cores = 2, 
                         top.models = 10,
-                        ppm.conf = list(na.action = na.exclude,
-                                        correction="border",
+                        ppm.conf = list(correction="border",
                                         use.gam=FALSE,
                                         method="logi",
                                         forcefit=FALSE,
@@ -71,7 +70,7 @@ ppmBatchFit <- function(points= NULL,
       stop("ppmBatchFit requires more than 1 formula, please use ppmSingleFit")
     }
   
-    if(class(formulas) == "gamforms"){ppm.conf$use.gam <- TRUE}
+    if(inherits(formulas, "gamforms")){ppm.conf$use.gam <- TRUE}
     
     #Methods for bias correction
     if(!is.null(bias.correction)){
@@ -91,37 +90,37 @@ ppmBatchFit <- function(points= NULL,
         
         w <- spatstat.geom::as.owin(imList[[1]])
         
-        if(class(points) == "data.frame"){
+        if(inherits(points, "data.frame")){
           pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
           Q <- spatstat.geom::pixelquad(pp)
         } 
         
-        if(class(points) == "ppp"){
+        if(inherits(points, "ppp")){
           Q <- spatstat.geom::pixelquad(points)
         }
   
-        if(class(points) == "quad"){
+        if(inherits(points, "quad")){
           Q <- points
         }
       }
       
       if(bias.correction == "weights"){
-        if(class(bias.data) == "data.frame"){
+        if(inherits(bias.data, "data.frame")){
   
           imList <- imFromStack(covariates)
   
           w <- spatstat.geom::as.owin(imList[[1]])
           
-          if(class(points) == "data.frame"){
+          if(inherits(points, "data.frame")){
             pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
             Q <- spatstat.geom::pixelquad(pp)
           } 
           
-          if(class(points) == "ppp"){
+          if(inherits(points, "ppp")){
             Q <- spatstat.geom::pixelquad(points)
           }
   
-          if(class(points) == "quad"){
+          if(inherits(points, "quad")){
             Q <- points
           }
           
@@ -137,7 +136,7 @@ ppmBatchFit <- function(points= NULL,
           Q <- Qa
         }
         
-        if(class(bias.data) == "SpatRaster"){
+        if(inherits(bias.data, "SpatRaster")){
           
           imList <- imFromStack(covariates)
           
@@ -149,16 +148,16 @@ ppmBatchFit <- function(points= NULL,
           
           w <- spatstat.geom::as.owin(imList[[1]])
           
-          if(class(points) == "data.frame"){
+          if(inherits(points, "data.frame")){
             pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
             Q <- spatstat.geom::pixelquad(pp)
           } 
           
-          if(class(points) == "ppp"){
+          if(inherits(points, "ppp")){
             Q <- spatstat.geom::pixelquad(points)
           }
   
-          if(class(points) == "quad"){
+          if(inherits(points, "quad")){
             Q <- points
           }
           
@@ -178,26 +177,26 @@ ppmBatchFit <- function(points= NULL,
     
     if(is.null(bias.correction)){
   
-      if(class(covariates) == "SpatRaster"){
+      if(inherits(covariates, "SpatRaster")){
         imList <- imFromStack(covariates)
         w <- spatstat.geom::as.owin(imList[[1]])
       } 
       
-      if(class(covariates) == "imList"){
+      if(inherits(covariates, "imList")){
         imList <- covariates
         w <- spatstat.geom::as.owin(imList[[1]])
       }
       
-      if(class(points) == "data.frame"){
+      if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
       }
       
-      if(class(points) == "ppp"){
+      if(inherits(points, "ppp")){
         Q <- spatstat.geom::pixelquad(points)
       }
   
-      if(class(points) == "quad"){
+      if(inherits(points, "quad")){
         Q <- points
       }
     }    
@@ -206,12 +205,11 @@ ppmBatchFit <- function(points= NULL,
   
     doParallel::registerDoParallel(cores = cores)
     
-    models <- doParallel::foreach(i = seq_along(formulas)) %dopar% {
+    models <- foreach::foreach(i = seq_along(formulas)) %dopar% {
       
-      form <- as.formula(formulas[i])
+      form <- stats::as.formula(formulas[i])
       m <- spatstat.model::ppm(Q, trend = form, 
                                covariates = imList,
-                               na.action = ppm.conf$na.action,
                                correction = ppm.conf$correction,
                                use.gam = ppm.conf$use.gam,
                                method = ppm.conf$method,
@@ -227,11 +225,10 @@ ppmBatchFit <- function(points= NULL,
   
     models <- foreach::foreach(i = seq_along(formulas)) %do% {
   
-      form <- as.formula(formulas[i])
+      form <- stats::as.formula(formulas[i])
   
       m <- spatstat.model::ppm(Q, trend = form, 
                                covariates = imList,
-                               na.action = ppm.conf$na.action,
                                correction = ppm.conf$correction,
                                use.gam = ppm.conf$use.gam,
                                method = ppm.conf$method,

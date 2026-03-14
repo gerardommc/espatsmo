@@ -8,7 +8,6 @@
 #' where the first two should be the x and y coordinates and the third the weights. Alternatively, a SpatRaster or
 #' im object representing the spatial variability of observation effor.
 #' @param im an im object with the same resolution of the quadrature scheme in the Q argument. 
-#' @param nsim integer, the number of simulations used to derive the expected point intensity of 
 #' observation localitites if bias.data is a set of point localities.
 #' @param positive Logical, specciffying whether density of sampling localities should be positive.
 #' @param kernel A character string, specifying the type of kernel for the sampling localities.
@@ -49,11 +48,11 @@ replaceQAreas <- function(Q = NULL,
                           edge = TRUE){
 
   
-  if(class(bias.data) == "data.frame"){
+  if(inherits(bias.data, "data.frame")){
       window <- Q$dummy$window
     
     if(inherits(im, "SpatRaster")){r <- im}
-    if(inherits(im, "im")){r <- terra::im(im)}
+    if(inherits(im, "im")){r <- terra::rast(im)}
     if(inherits(im, "imList")){r <- terra::rast(im[[1]])}
     
     r.counts <- terra::rasterize(bias.data, r, fun = "count") |> terra::as.data.frame(xy = T)
@@ -79,11 +78,11 @@ replaceQAreas <- function(Q = NULL,
     
     return(Q)}
   
-  if(!class(bias.data) == "data.frame"){
+  if(!inherits(bias.data, "data.frame")){
     
     if(inherits(bias.data, "SpatRaster")){
       im.r <- terra::rast(im)
-      crs(im.r) <- terra::crs(bias.data)
+      terra::crs(im.r) <- terra::crs(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
       zo <- ZeroOneNorm(bias.data, as.imList = F)
