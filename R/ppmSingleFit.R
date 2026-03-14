@@ -22,14 +22,12 @@
 #' 
 #' bias <- terra::rast("inst/extdata/Target-group.tif")
 #' 
-#' model <- ppmBatchFit(points= p, 
+#' model <- ppmSingleFit(points= p, 
 #'                      covariates = r, 
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                      bias.data = bias, #Data frame with sampling localities or raster layer
 #'                      bias.correction = "weights",
 #'                      as.ppmSingle = F)
-#' 
-#' spatstat.model::summary(model)
 #' }
 #' @export
 

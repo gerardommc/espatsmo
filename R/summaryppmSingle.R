@@ -1,0 +1,29 @@
+#' @title Generate summaries from model objects
+#' @description These functions require a range of inputs depending on the class of the supplied
+#' objects. For objects of class ppmSingle, if the argument as.ppmSingle = T, otherwise 
+#' summary will call spatstat.model::summary.ppm
+#' @examples
+#' \dontrun{
+#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' 
+#' p <- read.csv("inst/extdata/points.csv")
+#' 
+#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' 
+#' model <- ppmSingleFit(points= p, 
+#'                      covariates = r, 
+#'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
+#'                      bias.data = bias, #Data frame with sampling localities or raster layer
+#'                      bias.correction = "weights",
+#'                      as.ppmSingle = F)
+#' 
+#' summary(model)
+#' }
+#' @export
+#' @method summary ppmSingle
+
+summary.ppmSingle <- function(model = NULL){
+  spatstat.model::summary.ppm(object = model$model)
+}
+
+

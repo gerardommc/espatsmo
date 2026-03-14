@@ -51,8 +51,6 @@
 #'                  bias.data = bias,
 #'                  bias.correction = "weights",
 #'                  as.ppmSingle = F)
-#' 
-#' summary(model)
 #' }
 #' @export
 
