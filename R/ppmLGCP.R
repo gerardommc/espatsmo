@@ -348,7 +348,7 @@ ppmLGCP <- function(points = NULL,
   }
   gc(reset = T)
 
-  points.v <- data.frame(lon = points$x, lat = points$y) |> terra::vect()
+  points.v <- data.frame(lon = points$x, lat = points$y) |> as.matrix() |> terra::vect()
     terra::crs(points.v) <- terra::crs(covariates)
 
   points.r <- terra::rasterize(points.v, covariates, fun = "count")
