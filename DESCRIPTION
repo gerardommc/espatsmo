@@ -29,6 +29,7 @@ Imports:
       terra,
       foreach,
       doParallel,
+      fmesher,
       INLA,
       sf
 Additional_repositories:

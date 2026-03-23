@@ -11,12 +11,11 @@
 #' SpatRaster or imList object containing the spatial variability of the observation effort
 #' @param bias.correction character, with values 'weights' or 'background', 
 #' specifying the method used to control the effect of sampling bias
-#' @param  model.bias character, specifying the covariate name that will be set to zero in the data slot for prediction
-#' @param  model.bias.formula = NULL,
-#' @param  covariance.func character, specifying the name of the covariance function for the gaussian process, either "pcmatern", or "matern". Please check how these options should be configured 
+#' @param covariate.zero Character, indicating the variable name representing observer bias within the model formula. Must be a variable contained in the covariates raster stack
+#' @param covariance.func character, specifying the name of the covariance function for the gaussian process, either "pcmatern", or "matern". Please check how these options should be configured 
 #' via the `prior.conf` argument.
 #' @param weight.bias.conf list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge
-#' @param  prior.conf list, with two different specifications depending on the covariance function selected. 
+#' @param prior.conf list, with two different specifications depending on the covariance function selected. 
 #' If `covariance.func = "pcmatern"`, the list must provide values for: 1) alpha = 2,
 #' 2) prior.range = c(100, 0.01), 3) prior.sigma = c(0.05, 0.01)).
 #' If `covariance.func = "matern"`, the list must provide values for:
@@ -26,6 +25,7 @@
 #' For in-depth descrition of the meaning of these parameters, the reades should consult INLA guidelines
 #' for both covariance functions and particularly adjust the distance-dependent arguments for the 
 #' coordinate units of the working point process.
+#' @param  ditst.ar Logical, indicating whether to include an autorregressive random effect for distance to presence points
 #' @param  mesh.par list, which must provide values for: 1) edge = 50, 
 #' and 2) offset = 50; used to configure the projector mesh to integrate the random field.
 #' @param  coordinates character, used to specify the x and y units in which the covariance 

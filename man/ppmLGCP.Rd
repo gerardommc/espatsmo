@@ -9,22 +9,21 @@ ppmLGCP(
   covariates = NULL,
   formula = NULL,
   offset = NULL,
-  no.bkgd = 5000,
-  group.bins = 40,
+  no.bkgd = NULL,
+  group.bins = 50,
   bias.data = NULL,
   bias.correction = NULL,
-  model.bias = NULL,
-  model.bias.formula = NULL,
+  covariate.zero = NULL,
   covariance.func = "pcmatern",
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
     NULL, weights = NULL, edge = TRUE),
   prior.conf = list(alpha = 2, prior.range = c(10000, 0.01), prior.sigma = c(0.05, 0.01)),
-  mesh.par = list(edge = 50, offset = 50),
-  coordinates = "metres",
-  dist.units = "km",
+  mesh.par = list(edge = 5000, offset = 10000),
+  coordinates = "m",
+  dist.units = "m",
   weight.units = "km",
+  dist.ar = T,
   verbose = T,
-  at.locs = T,
   inla.mode = "experimental"
 )
 }
@@ -47,9 +46,7 @@ SpatRaster or imList object containing the spatial variability of the observatio
 \item{bias.correction}{character, with values 'weights' or 'background', 
 specifying the method used to control the effect of sampling bias}
 
-\item{model.bias}{character, specifying the covariate name that will be set to zero in the data slot for prediction}
-
-\item{model.bias.formula}{= NULL,}
+\item{covariate.zero}{Character, indicating the variable name representing observer bias within the model formula. Must be a variable contained in the covariates raster stack}
 
 \item{covariance.func}{character, specifying the name of the covariance function for the gaussian process, either "pcmatern", or "matern". Please check how these options should be configured 
 via the `prior.conf` argument.}
@@ -71,18 +68,18 @@ coordinate units of the working point process.}
 and 2) offset = 50; used to configure the projector mesh to integrate the random field.}
 
 \item{coordinates}{character, used to specify the x and y units in which the covariance 
-matrix will be computed, and takes two possible values, "metres" or "km".}
+matrix will be computed, and takes two possible values, "m" or "km".}
 
 \item{dist.units}{character, used to specify the distance units in which the covariance 
-matrix will be computed, and takes two possible values, "metres" or "km".}
+matrix will be computed, and takes two possible values, "m" or "km".}
 
 \item{weight.units}{= "km",}
 
 \item{verbose}{logical, to configure whether the model fitting process will bee printed on screen in real time.}
 
-\item{at.locs}{logical, so specify whether the mesh projector vetices wil be located at background background points.}
-
 \item{inla.mode}{character, to specify whether the "experimental" of NULL model will be used}
+
+\item{ditst.ar}{Logical, indicating whether to include an autorregressive random effect for distance to presence points}
 }
 \value{
 list of class `ppmLGCP` containing the fitted model, call, mesh and predictions for fixed and random effects.
@@ -103,7 +100,6 @@ model <- ppmLGCP(points= p,
                  covariates = r, 
                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                  bias.data = bias,
-                 bias.correction = "weights",
-                 as.ppmSingle = F)
+                 bias.correction = "weights")
 }
 }
