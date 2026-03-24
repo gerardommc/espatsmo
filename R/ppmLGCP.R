@@ -475,7 +475,12 @@ ppmLGCP <- function(points = NULL,
   covs.df <- as.data.frame(covariates, xy = T) |> stats::na.omit()
   
   if(dist.ar){
-    bkgd.dist <- terra::distance(points.r, method = "geo", unit = "m") / 1000
+    if(dist.units == "km"){
+      bkgd.dist <- terra::distance(points.r, method = "geo", unit = "m") / 1000
+    }
+    if(dist.units == "m"){
+      bkgd.dist <- terra::distance(points.r, method = "geo", unit = "m")
+    }
     covs.df$dist <- terra::extract(bkgd.dist, covs.df[, c("x", "y")])$count
     final.form <- paste0(formula, " + dist")
   } else {
@@ -496,10 +501,13 @@ ppmLGCP <- function(points = NULL,
   
   sp.mm <- stats::model.matrix(formula(final.form), presence.df) |> data.frame()
   quad.mm <- stats::model.matrix(formula(final.form), quad.data) |> data.frame()
-  pred.mm <- stats::model.matrix(formula(final.form), covs.df) |> data.frame()
   
   if(!is.null(covariate.zero)){
-    pred.mm[[covariate.zero]] <- 0
+    covs.df1 <- covs.df
+    covs.df1[[covariate.zero]] <- 0
+    pred.mm <- stats::model.matrix(formula(final.form), covs.df1) |> data.frame()
+  }else{
+    pred.mm <- stats::model.matrix(formula(final.form), covs.df) |> data.frame()
   }
   
   if(!is.null(offset)){
