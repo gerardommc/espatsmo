@@ -113,11 +113,9 @@ ppmSingleFit <- function(points= NULL,
         
         imList <- imFromStack(covariates)
         
-        bias.data <- bias.data |> ZeroOneNorm()
+        sum.bias <- terra::global(bias.data, sum, na.rm = T, ID = F)
         
-        sum.bias <- terra::global(bias.data, sum, na.rm = T, ID = F)[, 1]
-        
-        bias.data <- bias.data/sum.bias * nrow(points)
+        bias.data <- bias.data/sum.bias$sum * nrow(points)
         
         Qa <- replaceQAreas(Q = Q,
                             bias.data = bias.data, 

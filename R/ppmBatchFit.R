@@ -141,11 +141,9 @@ ppmBatchFit <- function(points= NULL,
           
           imList <- imFromStack(covariates)
           
-          bias.data <- bias.data |> ZeroOneNorm()
+          sum.bias <- terra::global(bias.data, sum, na.rm = T, ID = F)
           
-          sum.bias <- terra::global(bias.data, sum, na.rm = T)[, 1]
-          
-          bias.data <- bias.data/sum.bias * nrow(points)
+          bias.data <- bias.data/sum.bias$sum * nrow(points)
           
           w <- spatstat.geom::as.owin(imList[[1]])
           

@@ -83,11 +83,10 @@ replaceQAreas <- function(Q = NULL,
       terra::crs(im.r) <- terra::crs(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
-      zo <- ZeroOneNorm(bias.data, as.imList = F)
-      sum.zo <- terra::global(zo, "sum", na.rm = T)
-      zo <- zo/sum.zo$sum
+      sum.bias <- terra::global(bias.data, "sum", na.rm = T)
+      bias.data <- bias.data/sum.bias$sum
       
-      SampleRatios <- imFromStack(zo/sum.zo$sum)
+      SampleRatios <- imFromStack(bias.data/sum.bias$sum)
     }
     
     if(inherits(bias.data, "im")){
@@ -95,11 +94,10 @@ replaceQAreas <- function(Q = NULL,
       bias.data <- terra::rast(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
-      zo <- ZeroOneNorm(bias.data, as.imList = F)
-      sum.zo <- terra::global(zo, "sum", na.rm = T)
-      zo <- zo/sum.zo$sum
+      sum.bias <- terra::global(bias.data, "sum", na.rm = T)
+      bias.data <- bias.data/sum.bias$sum
       
-      SampleRatios <- imFromStack(zo/sum.zo$sum)
+      SampleRatios <- imFromStack(bias.data/sum.bias$sum)
     }
     
     begin <- Q$w |> length() - length(SampleRatios[]) +1
