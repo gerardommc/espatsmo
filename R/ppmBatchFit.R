@@ -33,7 +33,8 @@
 #' 
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
-#' models <- ppmBatchFit(points = ,
+#' 
+#' models <- ppmBatchFit(points = p,
 #'                       covariates = r,
 #'                       formulas = forms,
 #'                       bias.data = bias,
@@ -72,9 +73,20 @@ ppmBatchFit <- function(points= NULL,
     }
   
     if(inherits(formulas, "gamforms")){ppm.conf$use.gam <- TRUE}
+  
+    if(!inherits(points, c("data.frame", "ppp", "quad"))){
+      stop("Please provide presence points as either a two-column data.frame, ppp, or quad object")
+    }
+  
+    if(inherits(points, "data.frame")){
+      if(names(points)[1] != "x" & names(points)[2] != "y"){
+        stop("Please change column names of presence points to \"x\" and \"y\" for long and lat respectively")
+      }
+    }
     
     #Methods for bias correction
     if(!is.null(bias.correction)){
+
       if(bias.correction == "background"){
   
         imList <- maskBias(covariates = covariates, 
@@ -97,15 +109,18 @@ ppmBatchFit <- function(points= NULL,
         } 
         
         if(inherits(points, "ppp")){
-          Q <- spatstat.geom::pixelquad(points)
+          pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+          Q <- spatstat.geom::pixelquad(pp)
         }
-  
+        
         if(inherits(points, "quad")){
-          Q <- points
+          pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+          Q <- spatstat.geom::pixelquad(pp)
         }
       }
       
       if(bias.correction == "weights"){
+
         if(inherits(bias.data, "data.frame")){
   
           imList <- imFromStack(covariates)
@@ -118,11 +133,13 @@ ppmBatchFit <- function(points= NULL,
           } 
           
           if(inherits(points, "ppp")){
-            Q <- spatstat.geom::pixelquad(points)
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
           }
-  
+          
           if(inherits(points, "quad")){
-            Q <- points
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
           }
           
           Qa <- replaceQAreas(Q = Q,
@@ -141,10 +158,6 @@ ppmBatchFit <- function(points= NULL,
           
           imList <- imFromStack(covariates)
           
-          sum.bias <- terra::global(bias.data, sum, na.rm = T, ID = F)
-          
-          bias.data <- bias.data/sum.bias$sum * nrow(points)
-          
           w <- spatstat.geom::as.owin(imList[[1]])
           
           if(inherits(points, "data.frame")){
@@ -153,11 +166,13 @@ ppmBatchFit <- function(points= NULL,
           } 
           
           if(inherits(points, "ppp")){
-            Q <- spatstat.geom::pixelquad(points)
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
           }
-  
+          
           if(inherits(points, "quad")){
-            Q <- points
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
           }
           
           Qa <- replaceQAreas(Q = Q,
@@ -189,14 +204,16 @@ ppmBatchFit <- function(points= NULL,
       if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
-      }
+      } 
       
       if(inherits(points, "ppp")){
-        Q <- spatstat.geom::pixelquad(points)
+        pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+        Q <- spatstat.geom::pixelquad(pp)
       }
-  
+      
       if(inherits(points, "quad")){
-        Q <- points
+        pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+        Q <- Q <- spatstat.geom::pixelquad(pp)
       }
     }    
   

@@ -55,109 +55,153 @@ ppmSingleFit <- function(points= NULL,
   source("Spatstat-functions/imFromStack.R")
   source("Spatstat-functions/replaceQAreas.R")
 
-  if(names(points)[1] != "x" & names(points)[2] != "y"){
-    stop("Please change column names of presence points to \"x\" and \"y\" for long and lat respectively")
-  }
-  
   if(is.null(points) | is.null(formula) | is.null(covariates)){
     stop("Please provide a valid set of points, covariates and model formula")
   }
 
-  if(!is.null(bias.correction)){
-    if(bias.correction == "background"){
-      imList <- maskBias(covariates = covariates, 
-                         bias.data = bias.data,
-                         points = points,
-                         positive = weight.bias.conf$positive, 
-                         kernel = weight.bias.conf$kernel,
-                         sigma = weight.bias.conf$sigma, 
-                         varcov = weight.bias.conf$sigma, 
-                         weights = weight.bias.conf$weights, 
-                         edge = weight.bias.conf$edge,
-                         p.keep = weight.bias.conf$p.keep,
-                         as.imList = T)
+  if(!inherits(points, c("data.frame", "ppp", "quad"))){
+    stop("Please provide presence points as either a two-column data.frame, ppp, or quad object")
+  }
+
+  if(inherits(points, "data.frame")){
+    if(names(points)[1] != "x" & names(points)[2] != "y"){
+      stop("Please change column names of presence points to \"x\" and \"y\" for long and lat respectively")
+    }
+  }
+
+
+    #Methods for bias correction
+    if(!is.null(bias.correction)){
+
+      if(bias.correction == "background"){
+  
+        imList <- maskBias(covariates = covariates, 
+                               bias.data = bias.data,
+                               points = points,
+                               positive = weight.bias.conf$positive, 
+                               kernel = weight.bias.conf$kernel,
+                               sigma = weight.bias.conf$sigma, 
+                               varcov = weight.bias.conf$sigma, 
+                               weights = weight.bias.conf$weights, 
+                               edge = weight.bias.conf$edge,
+                               p.keep = weight.bias.conf$p.keep,
+                               as.imList = T)
+        
+        w <- spatstat.geom::as.owin(imList[[1]])
+        
+        if(inherits(points, "data.frame")){
+          pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+          Q <- spatstat.geom::pixelquad(pp)
+        } 
+        
+        if(inherits(points, "ppp")){
+          pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+          Q <- spatstat.geom::pixelquad(pp)
+        }
+        
+        if(inherits(points, "quad")){
+          pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+          Q <- spatstat.geom::pixelquad(pp)
+        }
+      }
       
-      w <- spatstat.geom::as.owin(imList[[1]])
+      if(bias.correction == "weights"){
+
+        if(inherits(bias.data, "data.frame")){
+  
+          imList <- imFromStack(covariates)
+  
+          w <- spatstat.geom::as.owin(imList[[1]])
+          
+          if(inherits(points, "data.frame")){
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          } 
+          
+          if(inherits(points, "ppp")){
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          }
+          
+          if(inherits(points, "quad")){
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          }
+          
+          Qa <- replaceQAreas(Q = Q,
+                              bias.data = bias.data, 
+                              im = imList[[1]], 
+                              positive = weight.bias.conf$positive,
+                              kernel = weight.bias.conf$kernel,
+                              sigma = weight.bias.conf$sigma,
+                              varcov = weight.bias.conf$sigma, 
+                              weights = weight.bias.conf$weights, 
+                              edge = weight.bias.conf$edge)
+          Q <- Qa
+        }
+        
+        if(inherits(bias.data, "SpatRaster")){
+          
+          imList <- imFromStack(covariates)
+          
+          w <- spatstat.geom::as.owin(imList[[1]])
+          
+          if(inherits(points, "data.frame")){
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          } 
+          
+          if(inherits(points, "ppp")){
+            pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          }
+          
+          if(inherits(points, "quad")){
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            Q <- spatstat.geom::pixelquad(pp)
+          }
+          
+          Qa <- replaceQAreas(Q = Q,
+                              bias.data = bias.data, 
+                              im = imList[[1]],
+                              positive = weight.bias.conf$positive,
+                              kernel = weight.bias.conf$kernel,
+                              sigma = weight.bias.conf$sigma,
+                              varcov = weight.bias.conf$sigma, 
+                              weights = weight.bias.conf$weights, 
+                              edge = weight.bias.conf$edge)
+          Q <- Qa
+        }
+      }
+    } 
+    
+    if(is.null(bias.correction)){
+  
+      if(inherits(covariates, "SpatRaster")){
+        imList <- imFromStack(covariates)
+        w <- spatstat.geom::as.owin(imList[[1]])
+      } 
+      
+      if(inherits(covariates, "imList")){
+        imList <- covariates
+        w <- spatstat.geom::as.owin(imList[[1]])
+      }
       
       if(inherits(points, "data.frame")){
         pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
         Q <- spatstat.geom::pixelquad(pp)
       } 
       
-      if(inherits(points, "ppp")) {
-        Q <- spatstat.geom::pixelquad(points)
-      }
-
-      if(inherits(points, "quad")){
-        Q <- points
-      }
-    }
-    
-    if(bias.correction == "weights"){
-      if(inherits(bias.data, "data.frame")){
-
-        imList <- imFromStack(covariates)
-        Qa <- replaceQAreas(Q = Q,
-                            bias.data = bias.data, 
-                            im = imList[[1]],
-                            positive = weight.bias.conf$positive,
-                            kernel = weight.bias.conf$kernel,
-                            sigma = weight.bias.conf$sigma,
-                            varcov = weight.bias.conf$sigma, 
-                            weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge)
-        Q <- Qa
+      if(inherits(points, "ppp")){
+        pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
+        Q <- spatstat.geom::pixelquad(pp)
       }
       
-      if(inherits(bias.data, "SpatRaster")){
-        
-        imList <- imFromStack(covariates)
-        
-        sum.bias <- terra::global(bias.data, sum, na.rm = T, ID = F)
-        
-        bias.data <- bias.data/sum.bias$sum * nrow(points)
-        
-        Qa <- replaceQAreas(Q = Q,
-                            bias.data = bias.data, 
-                            im = imList[[1]], 
-                            positive = weight.bias.conf$positive,
-                            kernel = weight.bias.conf$kernel,
-                            sigma = weight.bias.conf$sigma,
-                            varcov = weight.bias.conf$sigma, 
-                            weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge)
-        Q <- Qa
-        
-        
+      if(inherits(points, "quad")){
+        pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+        Q <- Q <- spatstat.geom::pixelquad(pp)
       }
-    }
-  } 
-  
-  if(is.null(bias.correction)){
-
-    if(inherits(covariates, "SpatRaster")){
-      imList <- imFromStack(covariates)
-      w <- spatstat.geom::as.owin(imList[[1]])
-    } 
-    
-    if(inherits(covariates, "imList")){
-      imList <- covariates
-      w <- spatstat.geom::as.owin(imList[[1]])
-    }
-    
-    if(inherits(points, "data.frame")){
-      pp <- spatstat.geom::ppp(x = points$x, y = points$y, window = w)
-      Q <- spatstat.geom::pixelquad(pp)
-    }
-    
-    if(inherits(points, "ppp")){
-      Q <- spatstat.geom::pixelquad(points)
-    }  
-
-    if(inherits(points, "quad")){
-      Q <- points
-    } 
-  }
+    }    
   
   m <- spatstat.model::ppm(Q, 
                            trend = stats::as.formula(formula[i]), 

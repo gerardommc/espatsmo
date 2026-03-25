@@ -24,13 +24,13 @@
 #' 
 #' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |>  terra::rast()
 #' 
-#' iml <- imFromStack(r)
+#' iml <- imFromStack(r$bio1)
 #' 
 #' p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml[[1]]))
 #' 
 #' Q <- spatstat.geom::pixelquad(p.pp)
 #' 
-#' QA <- replaceQareas(Q = Q,
+#' QA <- replaceQAreas(Q = Q,
 #'                     bias.data = bias,
 #'                     im = iml)
 #' @export
@@ -47,7 +47,7 @@ replaceQAreas <- function(Q = NULL,
 
   
   if(inherits(bias.data, "data.frame")){
-      window <- Q$dummy$window
+    window <- Q$dummy$window
     
     if(inherits(im, "SpatRaster")){r <- im}
     if(inherits(im, "im")){r <- terra::rast(im)}
@@ -66,50 +66,64 @@ replaceQAreas <- function(Q = NULL,
                                            sigma = sigma, varcov = varcov, 
                                            weights = marks, edge = edge)
     
-    AreaWeights <- d.obs/d.E
+    SampleRatios <- d.obs/d.E
     
-    begin <- Q$w |> length() - length(AreaWeights[]) +1
+    begin <- Q$w |> length() - length(SampleRatios[]) +1
     end <- Q$w |> length()
     
-    NewAreas <- Q$w[begin:end] * AreaWeights[]
+    NewAreas <- Q$w[begin:end] * SampleRatios[]
     Q$w[begin:end] <- NewAreas
     
-    return(Q)}
+    return(Q)
+  }
   
-  if(!inherits(bias.data, "data.frame")){
-    
-    if(inherits(bias.data, "SpatRaster")){
+  if(inherits(bias.data, "SpatRaster")){
       im.r <- terra::rast(im)
       terra::crs(im.r) <- terra::crs(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = T)
-      bias.data <- bias.data/sum.bias$sum
+      bias.data <- bias.data/sum.bias$sum 
       
-      SampleRatios <- imFromStack(bias.data/sum.bias$sum)
-    }
+      bias.data <- bias.data * Q$data$n
+      
+      ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+      
+      n.pix <- terra::global(ones, "sum", na.rm = T)
+      
+      SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
     
-    if(inherits(bias.data, "im")){
+      begin <- Q$w |> length() - length(SampleRatios[]) +1
+      end <- Q$w |> length()
+      
+      NewAreas <- Q$w[begin:end] * SampleRatios[]
+      Q$w[begin:end] <- NewAreas
+      
+      return(Q)
+  }
+    
+  if(inherits(bias.data, "im")){
       im.r <- terra::rast(im)
       bias.data <- terra::rast(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = T)
-      bias.data <- bias.data/sum.bias$sum
+      bias.data <- bias.data/sum.bias$sum 
       
-      SampleRatios <- imFromStack(bias.data/sum.bias$sum)
-    }
-    
-    begin <- Q$w |> length() - length(SampleRatios[]) +1
-    end <- Q$w |> length()
-    
-    TotalArea <- Q$w[begin:end] |> sum()
-    
-    AreaWeights <- SampleRatios * TotalArea
-    
-    NewAreas <- Q$w[begin:end] * AreaWeights[]
-    Q$w[begin:end] <- NewAreas
-    
-    return(Q)
+      bias.data <- bias.data * Q$data$n
+      
+      ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+      
+      n.pix <- terra::global(ones, "sum", na.rm = T)
+      
+      SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
+
+      begin <- Q$w |> length() - length(SampleRatios[]) +1
+      end <- Q$w |> length()
+      
+      NewAreas <- Q$w[begin:end] * SampleRatios[]
+      Q$w[begin:end] <- NewAreas
+      
+      return(Q)
   }
 }

@@ -23,9 +23,18 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
+      spatstat,
       spatstat.geom,
       spatstat.model,
       spatstat.explore,
+      terra,
+      foreach,
+      doParallel,
+      fmesher,
+      INLA,
+      sf
+Depends:
+      spatstat,
       terra,
       foreach,
       doParallel,

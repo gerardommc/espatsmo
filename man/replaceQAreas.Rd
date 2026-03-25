@@ -54,13 +54,13 @@ p <- system.file("extdata", "points.csv", package = "espatsmo") |> read.csv()
 
 bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |>  terra::rast()
 
-iml <- imFromStack(r)
+iml <- imFromStack(r$bio1)
 
 p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml[[1]]))
 
 Q <- spatstat.geom::pixelquad(p.pp)
 
-QA <- replaceQareas(Q = Q,
+QA <- replaceQAreas(Q = Q,
                     bias.data = bias,
                     im = iml)
 }
