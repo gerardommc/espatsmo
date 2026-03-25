@@ -17,9 +17,7 @@ This function takes a single argument, which is a single or multiple band SpatRa
 into a list of im objects, and assigns an object class imList
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
-
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+ 
 r.iml <- imFromStack(r)
-}
 }

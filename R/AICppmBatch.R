@@ -4,14 +4,13 @@
 #' @param object A ppmBatch object produced by ppmBatchFit
 #' @return The function returns the Akaike Information Criterion, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -29,7 +28,6 @@
 #'                       top.models = 3)
 #' 
 #' AIC(models)
-#' }
 #' @export
 #' @method AIC ppmBatch
 

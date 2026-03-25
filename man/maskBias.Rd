@@ -53,17 +53,15 @@ presence points to be modelled, to ensure that these pixels are included in the 
 The remaining arguments are used to configure the density.ppp call.
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
-maskBias <- function(covariates = r, 
-                     bias.data = bias,
-                     points = p,
-                     p.keep = 0.5,
-                     as.imList = F)
-}
+masked <- maskBias(covariates = r, 
+                   bias.data = bias, 
+                   points = p,
+                   p.keep = 0.5,
+                   as.imList = F)
 }

@@ -10,14 +10,13 @@
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
 #' @return A data.frame containing the simulated area ratios, and saves the plot of the areas and its median.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' model <- ppmBatchFit(points= p, 
+#' model <- ppmSingleFit(points= p, 
 #'                      covariates = r, 
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                      bias.data = bias, #Data frame with sampling localities or raster layer
@@ -30,15 +29,14 @@
 #' 
 #' pred <- spatstat.model::predict(model, covariates = r.im, localities = r.im) |> terra::rast()
 #' 
-#' valid.points <- read.csv("inst/extdata/Valid_points.csv")
+#' valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo") |> read.csv()
 #' 
 #' proc <- partialROC(raster = pred,
 #'                    points = valid.points,
-#'                    plot.pars = list(name = "inst/extdata/PartialROC.pdf", 
+#'                    plot.pars = list(name = "PartialROC.pdf", 
 #'                                     width = 5, 
 #'                                     height = 5))
 #' 
-#' }
 #' @export
 
 partialROC <- function(raster, 

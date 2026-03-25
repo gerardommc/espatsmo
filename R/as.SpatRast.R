@@ -7,12 +7,10 @@
 #' @param target.crs A character string indicating the coordinate reference system for the SpatRaster to return.
 #' @return A terra package SpatRaster object with as many bands as items in the imList object.
 #' @examples
-#' \dontrun{
-#' iml <- readRDS("inst/extdata/ChelsaBio_imList.rds")
+#' iml <- system.file("extdata", "ChelsaBio_imList.rds", package = "espatsmo") |>  readRDS()
 #' 
 #' r <- as.SpatRast(x = iml,
 #'                  target.crs = "EPSG:6372")
-#' }
 #' @export
 
 as.SpatRast <- function(x = NULL, 

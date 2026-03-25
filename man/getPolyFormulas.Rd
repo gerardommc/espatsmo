@@ -22,9 +22,9 @@ is a string convertible to a formula object. the resulting formulas contain a po
 each subset of variables in compatMat
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
-resp <- read.csv("inst/extdata/Exponents.csv")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+
+resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |>  read.csv()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
@@ -32,5 +32,4 @@ compat <- findCompatibles(covariates = r,
 
 forms <- getPolyFormulas(respDF = resp, 
                          compatMat = compat)
-}
 }

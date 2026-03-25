@@ -17,20 +17,18 @@
 #' @param as.ppmSingle logical, whether to return a ppmSingle class object or a spatstat ppm model.
 #' @return A list of class `ppmSingle` containing the specified number of models to bee returned and the configuration of the call.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
 #' model <- ppmSingleFit(points= p, 
 #'                      covariates = r, 
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-#'                      bias.data = bias, #Data frame with sampling localities or raster layer
+#'                      bias.data = bias,
 #'                      bias.correction = "weights",
 #'                      as.ppmSingle = F)
-#' }
 #' @export
 
 

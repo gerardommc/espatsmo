@@ -16,12 +16,11 @@ These functions require a range of inputs depending on the class of the supplied
 objects. For objects of class ppmLGCP, the summary is for either fixed or random effects
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
 model <- ppmLGCP(points= p, 
                  covariates = r, 
@@ -31,5 +30,4 @@ model <- ppmLGCP(points= p,
                  as.ppmSingle = F)
 
 summary(model)
-}
 }

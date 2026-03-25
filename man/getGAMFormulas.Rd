@@ -21,9 +21,9 @@ MUST match those in the covariate compatibility matrix. Both arguments are used 
 is a string convertible to a formula object passed on to a gam or ppm with use.gam = T.
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
-resp <- read.csv("inst/extdata/Smoothers.csv")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+
+resp <- system.file("extdata", "Smoothers.csv", package = "espatsmo") |>  read.csv()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
@@ -31,5 +31,4 @@ compat <- findCompatibles(covariates = r,
 
 forms <- getGAMFormulas(respDF = resp, 
                          compatMat = compat)
-}
 }

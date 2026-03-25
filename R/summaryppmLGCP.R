@@ -4,13 +4,12 @@
 #' @param object A model fitted with ppmLGCP
 #' @param effects A character string specifying whether to print `fixed` or `random` effects or both
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
-#' 
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#'
 #' model <- ppmLGCP(points= p, 
 #'                  covariates = r, 
 #'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
@@ -19,7 +18,6 @@
 #'                  as.ppmSingle = F)
 #' 
 #' summary(model)
-#' }
 #' @export
 #' @method summary ppmLGCP
 

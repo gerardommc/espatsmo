@@ -8,14 +8,13 @@
 #' @param as.ppmSingle Logical, whether the returned object is a ppSingle, or spatstat.model::ppm to be handled with spatstat.
 #' @return A ppmSingle or ppm object.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
-#' 
-#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#'
+#' resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -32,10 +31,9 @@
 #'                       top.models = 3)
 #' 
 #' best <- batchBest(batch = models,
-#'                   as.ppmSingle = F)
+#'                   as.ppmSingle = T)
 #' 
 #' spatstat.model::summary(best)
-#' }
 #' @export
 
 batchBest <- function(batch = NULL, as.ppmSingle = T){

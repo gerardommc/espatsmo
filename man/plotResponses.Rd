@@ -44,20 +44,18 @@ which are passed to either replaceQAreas or maskBias. The funciton's output is a
 saved in the working directory, but can be changed using save.plot and plot.pars
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra:rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
 plotResponses(points = p,
               covariates = r,
               bias.data = bias,
               bias.correction = "weights",
               save.plot = T,
-              plot.pars = list(name = "ResponsePlot", 
+              plot.pars = list(name = "inst/extdata/ResponsePlot.pdf", 
                                width = 5, 
                                height = 5)) 
-}
 }

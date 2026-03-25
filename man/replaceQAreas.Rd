@@ -48,21 +48,19 @@ this function provides a way of correcting for sampling bias, by modiffying the 
 in relation to an assumed uniform sampling scenario.
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |> terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |> read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |>  terra::rast()
 
 iml <- imFromStack(r)
 
-p.pp <- spatstat.geom::ppp(x = p$x, y = $y, window = as.owin(iml[[1]]))
+p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml[[1]]))
 
 Q <- spatstat.geom::pixelquad(p.pp)
 
 QA <- replaceQareas(Q = Q,
                     bias.data = bias,
                     im = iml)
-}
 }

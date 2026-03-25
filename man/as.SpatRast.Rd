@@ -20,10 +20,8 @@ or a single im object, and the target.crs in the style required by the package t
 for the resulting SpatRaster.
 }
 \examples{
-\dontrun{
-iml <- readRDS("inst/extdata/ChelsaBio_imList.rds")
+iml <- system.file("extdata", "ChelsaBio_imList.rds", package = "espatsmo") |>  readRDS()
 
 r <- as.SpatRast(x = iml,
                  target.crs = "EPSG:6372")
-}
 }

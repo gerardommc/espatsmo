@@ -5,11 +5,9 @@
 #' @param r A terra SpatRaster, with 1:N bands
 #' @return A list of im objects, assigned the class imList.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
-#' 
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+#'  
 #' r.iml <- imFromStack(r)
-#' }
 #' @export
 
 imFromStack <- function(r = NULL){

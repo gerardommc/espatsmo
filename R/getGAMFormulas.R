@@ -7,9 +7,9 @@
 #' @param compatMat A covariate compatibility matrix generated with findCompatibles.
 #' @return A character vector containing the model formulas for each row of variable cobinations in compatMat.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
-#' resp <- read.csv("inst/extdata/Smoothers.csv")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+#' 
+#' resp <- system.file("extdata", "Smoothers.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -17,7 +17,6 @@
 #' 
 #' forms <- getGAMFormulas(respDF = resp, 
 #'                          compatMat = compat)
-#' }
 #' @export
 
 getGAMFormulas <- function(respDF, compatMat){

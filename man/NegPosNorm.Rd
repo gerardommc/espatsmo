@@ -23,12 +23,10 @@ returns a SpatRaster or imList with values (-1, 1) whilst retaining all
 its internal variability
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
 r.np <- NegPosNorm(r = r,
                    target.crs = "EPSG:6372",
                    as.imList = F)
 
-}
 }

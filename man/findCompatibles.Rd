@@ -21,11 +21,9 @@ This function takes three arguments, the covariates must be a SpatRaster or data
 a tolerated correlation threshold and the maximum number of variables to be contained in each subset
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
                           max.comb = 3)
-}
 }

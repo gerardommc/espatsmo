@@ -25,7 +25,7 @@
 #' For in-depth descrition of the meaning of these parameters, the reades should consult INLA guidelines
 #' for both covariance functions and particularly adjust the distance-dependent arguments for the 
 #' coordinate units of the working point process.
-#' @param  ditst.ar Logical, indicating whether to include an autorregressive random effect for distance to presence points
+#' @param  dist.ar Logical, indicating whether to include an autorregressive random effect for distance to presence points
 #' @param  mesh.par list, which must provide values for: 1) edge = 50, 
 #' and 2) offset = 50; used to configure the projector mesh to integrate the random field.
 #' @param  coordinates character, used to specify the x and y units in which the covariance 
@@ -37,19 +37,17 @@
 #' @param  inla.mode character, to specify whether the "experimental" of NULL model will be used
 #' @return list of class `ppmLGCP` containing the fitted model, call, mesh and predictions for fixed and random effects.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
 #' model <- ppmLGCP(points= p, 
 #'                  covariates = r, 
 #'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                  bias.data = bias,
 #'                  bias.correction = "weights")
-#' }
 #' @export
 
 ppmLGCP <- function(points = NULL,
@@ -70,7 +68,7 @@ ppmLGCP <- function(points = NULL,
                                       prior.sigma = c(0.05, 0.01)),
                     mesh.par = list(edge = 5000, offset = 10000), # for the distance between points in the spde, units are x the grain size in raster layers
                     coordinates = "m",
-                    dist.units = "m",
+                    dist.units = "km",
                     weight.units = "km",
                     dist.ar = T,
                     verbose = T,

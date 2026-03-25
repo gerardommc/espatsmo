@@ -8,9 +8,9 @@
 #' @param compatMat A covariate compatibility matrix generated with findCompatibles.
 #' @return A character vector containing the model formulas for each row of variable cobinations in compatMat, and here each term in the formula has an exponent 1:Power.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
-#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+#' 
+#' resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -18,7 +18,6 @@
 #' 
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
-#' }
 #' @export
 
 

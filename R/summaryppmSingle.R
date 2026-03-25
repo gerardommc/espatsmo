@@ -4,12 +4,11 @@
 #' summary will call spatstat.model::summary.ppm
 #' @param object A model fitted with ppmSingle
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |>  scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast("")
 #' 
 #' model <- ppmSingleFit(points= p, 
 #'                      covariates = r, 
@@ -19,7 +18,6 @@
 #'                      as.ppmSingle = F)
 #' 
 #' summary(model)
-#' }
 #' @export
 #' @method summary ppmSingle
 

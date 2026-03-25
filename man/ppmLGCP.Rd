@@ -20,7 +20,7 @@ ppmLGCP(
   prior.conf = list(alpha = 2, prior.range = c(10000, 0.01), prior.sigma = c(0.05, 0.01)),
   mesh.par = list(edge = 5000, offset = 10000),
   coordinates = "m",
-  dist.units = "m",
+  dist.units = "km",
   weight.units = "km",
   dist.ar = T,
   verbose = T,
@@ -75,11 +75,11 @@ matrix will be computed, and takes two possible values, "m" or "km".}
 
 \item{weight.units}{= "km",}
 
+\item{dist.ar}{Logical, indicating whether to include an autorregressive random effect for distance to presence points}
+
 \item{verbose}{logical, to configure whether the model fitting process will bee printed on screen in real time.}
 
 \item{inla.mode}{character, to specify whether the "experimental" of NULL model will be used}
-
-\item{ditst.ar}{Logical, indicating whether to include an autorregressive random effect for distance to presence points}
 }
 \value{
 list of class `ppmLGCP` containing the fitted model, call, mesh and predictions for fixed and random effects.
@@ -89,17 +89,15 @@ Fit a log-Gaussian Cox point process model using INLA, with the posibility of co
 by modifying area weights or the distribution of background (quadrature) points.
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
 model <- ppmLGCP(points= p, 
                  covariates = r, 
                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                  bias.data = bias,
                  bias.correction = "weights")
-}
 }

@@ -15,12 +15,11 @@ objects. For objects of class ppmSingle, if the argument as.ppmSingle = T, other
 summary will call spatstat.model::summary.ppm
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |>  scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast("")
 
 model <- ppmSingleFit(points= p, 
                      covariates = r, 
@@ -30,5 +29,4 @@ model <- ppmSingleFit(points= p,
                      as.ppmSingle = F)
 
 summary(model)
-}
 }

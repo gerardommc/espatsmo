@@ -16,14 +16,13 @@ The function returns the Akaike Information Criterion, one for a ppmSigle object
 Print the Akaike information criterion of one or multiple point proces models fitted with spatstat's ppm, but via the inteface of the presente package.@
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
-resp <- read.csv("inst/extdata/Exponents.csv")
+resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |>  read.csv()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
@@ -41,5 +40,4 @@ models <- ppmBatchFit(points = ,
                       top.models = 3)
 
 AIC(models)
-}
 }

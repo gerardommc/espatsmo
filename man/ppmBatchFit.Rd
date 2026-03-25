@@ -55,14 +55,13 @@ A list of class `ppmBatch` containing the specified number of models to bee retu
 Fit multiple point process models and select a specified number on the basis of the AIC
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
-resp <- read.csv("inst/extdata/Exponents.csv")
+resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
@@ -77,5 +76,4 @@ models <- ppmBatchFit(points = ,
                       bias.correction = "weights",
                       parallel = F,
                       top.models = 3)
-}
 }

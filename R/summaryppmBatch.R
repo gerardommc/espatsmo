@@ -4,14 +4,13 @@
 #' @param object A batch of point process models fitted with ppmBatchFit
 #' @param id The id of the model(s) to print the summary.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
-#' 
-#' resp <- read.csv("inst/extdata/Exponents.csv")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#'
+#' resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -29,7 +28,6 @@
 #'                       top.models = 3)
 #' 
 #' summary(models, id = 2)
-#' }
 #' @export
 #' @method summary ppmBatch
 

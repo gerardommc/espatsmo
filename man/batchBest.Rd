@@ -22,14 +22,13 @@ Independently, of the latter being set as TRUE, the ppm object
 is contained within the model slot of the returned ppmSingle object
 }
 \examples{
-\dontrun{
-r <- terra::rast("inst/extdata/ChelsaBio.tif")
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 
-p <- read.csv("inst/extdata/points.csv")
+p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- terra::rast("inst/extdata/Target-group.tif")
+bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
-resp <- read.csv("inst/extdata/Exponents.csv")
+resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
@@ -46,8 +45,7 @@ models <- ppmBatchFit(points = ,
                       top.models = 3)
 
 best <- batchBest(batch = models,
-                  as.ppmSingle = F)
+                  as.ppmSingle = T)
 
 spatstat.model::summary(best)
-}
 }

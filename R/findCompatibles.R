@@ -6,13 +6,11 @@
 #' @param max.comb Numeric integer, representing the number of covariates for the combinations.
 #' @return A data.frame with max.comb columns. The number of rows depends on the number combinations possible given the correlatin threshold specified.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif")
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
 #'                           max.comb = 3)
-#' }
 #' @export
 
 findCompatibles <- function(covariates = NULL, 

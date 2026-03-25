@@ -19,19 +19,17 @@
 #' @param as.imList Logical, whether the returned object will be an imList or SpatRaster.
 #' @return A SpatRaster or imList with the same covariates as the entered set.
 #' @examples
-#' \dontrun{
-#' r <- terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- read.csv("inst/extdata/points.csv")
+#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- terra::rast("inst/extdata/Target-group.tif")
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' maskBias <- function(covariates = r, 
-#'                      bias.data = bias,
-#'                      points = p,
-#'                      p.keep = 0.5,
-#'                      as.imList = F)
-#' }
+#' masked <- maskBias(covariates = r, 
+#'                    bias.data = bias, 
+#'                    points = p,
+#'                    p.keep = 0.5,
+#'                    as.imList = F)
 #' @export
 
 maskBias <- function(covariates = NULL, 

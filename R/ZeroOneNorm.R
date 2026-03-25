@@ -9,14 +9,12 @@
 #' @param target.crs A character string specifying the CRS of the returned object.
 #' @return A SpatRaster or imList object.
 #' @examples
-#' \dontrun{
-#' r <- terra::terra::rast("inst/extdata/ChelsaBio.tif") |> scale()
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' r.zon <- ZeroOneNorm(r = r,
 #'                      as.imList = F,
 #'                      target.crs = "EPSG:6372")
-#' }
-#' 
+#' @export 
 
 ZeroOneNorm <- function(r = NULL, 
                         as.imList = F,
