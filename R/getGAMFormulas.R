@@ -20,6 +20,8 @@
 #' @export
 
 getGAMFormulas <- function(respDF, compatMat){
+
+  `%do%` <- foreach::`%do%`
   
   formulas <-  foreach::foreach(i = 1:nrow(compatMat), .combine = c) %do% {
     v <- compatMat[i, ]

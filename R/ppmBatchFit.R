@@ -63,6 +63,9 @@ ppmBatchFit <- function(points= NULL,
                                         improve.args=list(),
                                         prior.mean = NULL,
                                         prior.var = NULL)){ 
+  
+    `%do%` <- foreach::`%do%`
+    `%dopar%` <- foreach::`%dopar%`
     
     if(length(formulas) == 1){
       stop("ppmBatchFit requires more than 1 formula, please use ppmSingleFit")

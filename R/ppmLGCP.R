@@ -76,6 +76,8 @@ ppmLGCP <- function(points = NULL,
   
   INLA::inla.setOption(inla.mode = inla.mode)
 
+  `%do%` <- foreach::`%do%`
+
   if(is.null(points) | is.null(covariates) | is.null(formula)){
     stop("Please provide a valid set of points, covariates and one model formula")
   }

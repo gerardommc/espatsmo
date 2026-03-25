@@ -32,6 +32,8 @@ getPolyFormulas <- function(respDF = NULL,
   if(is.null(compatMat)){
     stop("Cannot produce formulas, please provide a valid compatibility matrix")
   }
+
+  `%do%` <- foreach::`%do%`
     
   formulas <-  foreach::foreach(i = 1:nrow(compatMat), .combine = c) %do% {
     v <- compatMat[i, ]
