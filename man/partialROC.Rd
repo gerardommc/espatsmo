@@ -56,7 +56,7 @@ spatstat.model::summary.ppm(model)
 
 r.im <- imFromStack(r)
 
-pred <- spatstat.model::predict(model, covariates = r.im, localities = r.im) |> terra::rast()
+pred <- spatstat.model::predict.ppm(model, covariates = r.im, localities = r.im) |> terra::rast()
 
 valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo") |> read.csv()
 
