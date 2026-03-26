@@ -26,7 +26,7 @@
 #' 
 #' iml <- imFromStack(r$bio1)
 #' 
-#' p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml[[1]]))
+#' p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml))
 #' 
 #' Q <- spatstat.geom::pixelquad(p.pp)
 #' 
@@ -80,7 +80,7 @@ replaceQAreas <- function(Q = NULL,
   if(inherits(bias.data, "SpatRaster")){
       im.r <- terra::rast(im)
       terra::crs(im.r) <- terra::crs(bias.data)
-      bias.data <- terra::resample(bias.data, im.r)
+      bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 
@@ -105,7 +105,7 @@ replaceQAreas <- function(Q = NULL,
   if(inherits(bias.data, "im")){
       im.r <- terra::rast(im)
       bias.data <- terra::rast(bias.data)
-      bias.data <- terra::resample(bias.data, im.r)
+      bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 

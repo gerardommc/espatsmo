@@ -42,15 +42,14 @@ ppmSingleFit <- function(points= NULL,
                                         sigma = NULL, varcov = NULL,
                                         weights = NULL, edge = TRUE ,
                                         p.keep = 0.5),
-                ppm.conf = list(correction="border",
-                                use.gam=FALSE,
-                                method="logi",
-                                forcefit=FALSE,
-                                improve.type = "none",
-                                improve.args=list(),
-                                prior.mean = NULL,
-                                prior.var = NULL)){
-
+                        ppm.conf = list(correction="border",
+                                        use.gam=FALSE,
+                                        method="logi",
+                                        forcefit=FALSE,
+                                        improve.type = "none",
+                                        improve.args=list(),
+                                        prior.mean = NULL,
+                                        prior.var = NULL)){
   
   if(is.null(points) | is.null(formula) | is.null(covariates)){
     stop("Please provide a valid set of points, covariates and model formula")

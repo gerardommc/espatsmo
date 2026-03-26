@@ -56,7 +56,7 @@ bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |>  ter
 
 iml <- imFromStack(r$bio1)
 
-p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml[[1]]))
+p.pp <- spatstat.geom::ppp(x = p$x, y = p$y, window = as.owin(iml))
 
 Q <- spatstat.geom::pixelquad(p.pp)
 

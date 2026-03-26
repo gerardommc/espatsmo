@@ -26,8 +26,7 @@ model <- ppmLGCP(points= p,
                  covariates = r, 
                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                  bias.data = bias,
-                 bias.correction = "weights",
-                 as.ppmSingle = FALSE)
+                 bias.correction = "weights")
 
 summary(model)
 }

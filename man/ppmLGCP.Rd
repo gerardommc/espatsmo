@@ -22,8 +22,8 @@ ppmLGCP(
   coordinates = "m",
   dist.units = "km",
   weight.units = "km",
-  dist.ar = TRUE,
-  verbose = TRUE,
+  dist.ar = FALSE,
+  verbose = FALSE,
   inla.mode = "experimental"
 )
 }
@@ -98,6 +98,7 @@ bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terr
 model <- ppmLGCP(points= p, 
                  covariates = r, 
                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-                 bias.data = bias,
-                 bias.correction = "weights")
+                 dist.ar = FALSE,
+                 weight.units = "km",
+                 coordinates = "m")
 }

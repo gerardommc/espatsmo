@@ -46,8 +46,9 @@
 #' model <- ppmLGCP(points= p, 
 #'                  covariates = r, 
 #'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-#'                  bias.data = bias,
-#'                  bias.correction = "weights")
+#'                  dist.ar = FALSE,
+#'                  weight.units = "km",
+#'                  coordinates = "m")
 #' @export
 
 ppmLGCP <- function(points = NULL,
@@ -70,8 +71,8 @@ ppmLGCP <- function(points = NULL,
                     coordinates = "m",
                     dist.units = "km",
                     weight.units = "km",
-                    dist.ar = TRUE,
-                    verbose = TRUE,
+                    dist.ar = FALSE,
+                    verbose = FALSE,
                     inla.mode = "experimental"){
   
   INLA::inla.setOption(inla.mode = inla.mode)
@@ -419,7 +420,7 @@ ppmLGCP <- function(points = NULL,
 
   #Distance to quadrature points
 
-  points.v <- data.frame(lon = points$x, lat = points$y) |> terra::vect()
+  points.v <- data.frame(lon = points$x, lat = points$y) |> as.matrix()  |> terra::vect()
   terra::crs(points.v) <- terra::crs(covariates)
 
   points.r <- terra::rasterize(points.v, covariates, fun = "count")

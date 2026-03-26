@@ -29,7 +29,7 @@
 #'               bias.data = bias,
 #'               bias.correction = "weights",
 #'               save.plot = TRUE,
-#'               plot.pars = list(name = "inst/extdata/ResponsePlot.pdf", 
+#'               plot.pars = list(name = "ResponsePlot.pdf", 
 #'                                width = 5, 
 #'                                height = 5)) 
 #' @export
