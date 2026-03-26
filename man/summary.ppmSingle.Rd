@@ -11,7 +11,7 @@
 }
 \description{
 These functions require a range of inputs depending on the class of the supplied
-objects. For objects of class ppmSingle, if the argument as.ppmSingle = T, otherwise 
+objects. For objects of class ppmSingle, if the argument as.ppmSingle = TRUE, otherwise 
 summary will call spatstat.model::summary.ppm
 }
 \examples{
@@ -26,7 +26,7 @@ model <- ppmSingleFit(points= p,
                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                      bias.data = bias, #Data frame with sampling localities or raster layer
                      bias.correction = "weights",
-                     as.ppmSingle = F)
+                     as.ppmSingle = FALSE)
 
 summary(model)
 }

@@ -21,9 +21,9 @@
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                      bias.data = bias, #Data frame with sampling localities or raster layer
 #'                      bias.correction = "weights",
-#'                      as.ppmSingle = F)
+#'                      as.ppmSingle = FALSE)
 #' 
-#' spatstat.model::summary(model)
+#' spatstat.model::summary.ppm(model)
 #' 
 #' r.im <- imFromStack(r)
 #' 
@@ -45,7 +45,7 @@ partialROC <- function(raster,
                        iterations = 39,
                        buf = NULL, 
                        omission = 0, 
-                       save.plot = T, 
+                       save.plot = TRUE, 
                        plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)){
   
   if(!is.null(buf)){
@@ -61,9 +61,9 @@ partialROC <- function(raster,
   
   if(omission > 0){
     vals <- terra::extract(raster, points[, 1:2])[,2]
-    q <- stats::quantile(vals, 1-omission, na.rm = T)
+    q <- stats::quantile(vals, 1-omission, na.rm = TRUE)
     om.r <- raster < q
-    om.r <- terra::classify(om.r, rcl = matrix(c(-Inf, 0, NA), ncol = 3, byrow = T))
+    om.r <- terra::classify(om.r, rcl = matrix(c(-Inf, 0, NA), ncol = 3, byrow = TRUE))
     raster <- terra::mask(raster, om.r)
     
     points <- points[vals < q, ]
@@ -76,10 +76,10 @@ partialROC <- function(raster,
   
   #Thresholding suitability layer
   r.thr <- r >= thres
-  area.pred <- terra::global(r.thr, mean, na.rm = T)$mean
+  area.pred <- terra::global(r.thr, mean, na.rm = TRUE)$mean
   dArea <- area.pred[1:100] - area.pred[2:101]
   
-  points.r <- as.data.frame(r.thr, xy = T)[, c("x", "y")]
+  points.r <- as.data.frame(r.thr, xy = TRUE)[, c("x", "y")]
   
   mp <- matrix(0, nrow = iterations, ncol = length(area.pred))
   mr <- matrix(0, nrow = iterations, ncol = length(area.pred))
@@ -91,8 +91,8 @@ partialROC <- function(raster,
                        "PartialROC")
   
   for(i in 1:iterations){
-    samp.pres <- sample(1:nrow(points), size = nrow(points) * p.points, replace = F)
-    samp.rand <- sample(1:nrow(points.r), size = nrow(points) * p.points, replace = F)
+    samp.pres <- sample(1:nrow(points), size = nrow(points) * p.points, replace = FALSE)
+    samp.rand <- sample(1:nrow(points.r), size = nrow(points) * p.points, replace = FALSE)
     
     pres.thr <- terra::extract(r.thr, points[samp.pres, 1:2])[, -1]
     rand.thr <- terra::extract(r.thr, points.r[samp.rand, ])[, -1]
@@ -134,8 +134,8 @@ partialROC <- function(raster,
       graphics::lines(area.pred, mp[j, ], col = "grey95", lwd = 0.25, type = "l")
       graphics::lines(area.pred, mr[j, ], col = "grey95", lty = 2, lwd = 0.25, type = "l")
     }
-    graphics::lines(area.pred, colMeans(mp, na.rm = T), col = "red", lwd = 1.5, type = "s")
-    graphics::lines(area.pred, colMeans(mr, na.rm = T), type = "s")
+    graphics::lines(area.pred, colMeans(mp, na.rm = TRUE), col = "red", lwd = 1.5, type = "s")
+    graphics::lines(area.pred, colMeans(mr, na.rm = TRUE), type = "s")
   grDevices::dev.off()
 }
 

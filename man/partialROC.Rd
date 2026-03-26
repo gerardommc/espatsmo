@@ -11,7 +11,7 @@ partialROC(
   iterations = 39,
   buf = NULL,
   omission = 0,
-  save.plot = T,
+  save.plot = TRUE,
   plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)
 )
 }
@@ -50,9 +50,9 @@ model <- ppmSingleFit(points= p,
                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                      bias.data = bias, #Data frame with sampling localities or raster layer
                      bias.correction = "weights",
-                     as.ppmSingle = F)
+                     as.ppmSingle = FALSE)
 
-spatstat.model::summary(model)
+spatstat.model::summary.ppm(model)
 
 r.im <- imFromStack(r)
 

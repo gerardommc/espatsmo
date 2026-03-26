@@ -28,7 +28,7 @@
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                      bias.data = bias,
 #'                      bias.correction = "weights",
-#'                      as.ppmSingle = F)
+#'                      as.ppmSingle = FALSE)
 #' @export
 
 
@@ -37,7 +37,7 @@ ppmSingleFit <- function(points= NULL,
                          formula = NULL, 
                          bias.data = NULL, #Data frame with sampling localities or raster layer
                          bias.correction = NULL,
-                         as.ppmSingle = T,
+                         as.ppmSingle = TRUE,
                          weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                         sigma = NULL, varcov = NULL,
                                         weights = NULL, edge = TRUE ,
@@ -52,9 +52,6 @@ ppmSingleFit <- function(points= NULL,
                                 prior.var = NULL)){
 
   
-  source("Spatstat-functions/imFromStack.R")
-  source("Spatstat-functions/replaceQAreas.R")
-
   if(is.null(points) | is.null(formula) | is.null(covariates)){
     stop("Please provide a valid set of points, covariates and model formula")
   }
@@ -85,7 +82,7 @@ ppmSingleFit <- function(points= NULL,
                                weights = weight.bias.conf$weights, 
                                edge = weight.bias.conf$edge,
                                p.keep = weight.bias.conf$p.keep,
-                               as.imList = T)
+                               as.imList = TRUE)
         
         w <- spatstat.geom::as.owin(imList[[1]])
         
@@ -204,7 +201,7 @@ ppmSingleFit <- function(points= NULL,
     }    
   
   m <- spatstat.model::ppm(Q, 
-                           trend = stats::as.formula(formula[i]), 
+                           trend = stats::as.formula(formula), 
                            covariates = imList,
                            correction = ppm.conf$correction,
                            use.gam = ppm.conf$use.gam,

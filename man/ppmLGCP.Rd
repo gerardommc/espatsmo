@@ -22,8 +22,8 @@ ppmLGCP(
   coordinates = "m",
   dist.units = "km",
   weight.units = "km",
-  dist.ar = T,
-  verbose = T,
+  dist.ar = TRUE,
+  verbose = TRUE,
   inla.mode = "experimental"
 )
 }

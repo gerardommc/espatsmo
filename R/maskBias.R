@@ -29,7 +29,7 @@
 #'                    bias.data = bias, 
 #'                    points = p,
 #'                    p.keep = 0.5,
-#'                    as.imList = F)
+#'                    as.imList = FALSE)
 #' @export
 
 maskBias <- function(covariates = NULL, 
@@ -39,7 +39,7 @@ maskBias <- function(covariates = NULL,
                      sigma = NULL, varcov = NULL, 
                      weights = NULL, edge = TRUE,
                      p.keep = 0.5,
-                     as.imList = F){
+                     as.imList = FALSE){
 
   if(is.null(covariates) | is.null(bias.data) | is.null(points)){
     stop("Cannot filter null data, please provide a sample SpatRaster, bias data and presence points")
@@ -88,11 +88,11 @@ maskBias <- function(covariates = NULL,
     bias.layer.r <- bias.data
   }
   
-  bias.df <- as.data.frame(bias.layer.r, xy = T)
+  bias.df <- as.data.frame(bias.layer.r, xy = TRUE)
   
   samp <- sample(1:nrow(bias.df), 
                  size = p.keep*nrow(bias.df), 
-                 replace = F, prob = bias.df[, 3]) |> sort()
+                 replace = FALSE, prob = bias.df[, 3]) |> sort()
   
   if(inherits(points, "ppp")){
     points <- data.frame(x = points$x, y = points$y)
@@ -103,14 +103,14 @@ maskBias <- function(covariates = NULL,
   }
   
   pres.r <- terra::rasterize(as.matrix(points), covariates[[1]])
-  pres.r <-  terra::classify(pres.r, rcl = matrix(c(1, Inf, 1, 0, 0, NA), byrow = T, ncol = 3))
+  pres.r <-  terra::classify(pres.r, rcl = matrix(c(1, Inf, 1, 0, 0, NA), byrow = TRUE, ncol = 3))
   
   samp.r <- terra::rasterize(bias.df[-samp, c("x", "y")], covariates[[1]])
-  samp.r <- terra::classify(samp.r, rcl = matrix(c(1, Inf, 1, 0, 0, NA), byrow = T, ncol = 3))
+  samp.r <- terra::classify(samp.r, rcl = matrix(c(1, Inf, 1, 0, 0, NA), byrow = TRUE, ncol = 3))
   
   filt.r <- terra::merge(pres.r, samp.r)
 
-  covariates.masked <- terra::mask(covariates, filt.r, inverse = T)
+  covariates.masked <- terra::mask(covariates, filt.r, inverse = TRUE)
 
   if(as.imList){
     covariates.masked.im <- imFromStack(covariates.masked)

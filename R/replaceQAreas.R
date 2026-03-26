@@ -53,11 +53,11 @@ replaceQAreas <- function(Q = NULL,
     if(inherits(im, "im")){r <- terra::rast(im)}
     if(inherits(im, "imList")){r <- terra::rast(im[[1]])}
     
-    r.counts <- terra::rasterize(bias.data, r, fun = "count") |> terra::as.data.frame(xy = T)
+    r.counts <- terra::rasterize(bias.data, r, fun = "count") |> terra::as.data.frame(xy = TRUE)
     
     sample.ppp <- spatstat.geom::ppp(x = r.counts$x, y = r.counts$y, marks = r.counts$count, window = window)
     
-    df.weights <- terra::as.data.frame(r, xy = T)
+    df.weights <- terra::as.data.frame(r, xy = TRUE)
     df.weights[, 3] <- sum(r.counts$count)/nrow(df.weights)
     
     d.E <- terra::rast(df.weights) |> imFromStack()
@@ -82,14 +82,14 @@ replaceQAreas <- function(Q = NULL,
       terra::crs(im.r) <- terra::crs(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
-      sum.bias <- terra::global(bias.data, "sum", na.rm = T)
+      sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 
       
       bias.data <- bias.data * Q$data$n
       
       ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
       
-      n.pix <- terra::global(ones, "sum", na.rm = T)
+      n.pix <- terra::global(ones, "sum", na.rm = TRUE)
       
       SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
     
@@ -107,14 +107,14 @@ replaceQAreas <- function(Q = NULL,
       bias.data <- terra::rast(bias.data)
       bias.data <- terra::resample(bias.data, im.r)
       
-      sum.bias <- terra::global(bias.data, "sum", na.rm = T)
+      sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 
       
       bias.data <- bias.data * Q$data$n
       
       ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
       
-      n.pix <- terra::global(ones, "sum", na.rm = T)
+      n.pix <- terra::global(ones, "sum", na.rm = TRUE)
       
       SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
 

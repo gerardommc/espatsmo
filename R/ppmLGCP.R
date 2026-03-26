@@ -70,8 +70,8 @@ ppmLGCP <- function(points = NULL,
                     coordinates = "m",
                     dist.units = "km",
                     weight.units = "km",
-                    dist.ar = T,
-                    verbose = T,
+                    dist.ar = TRUE,
+                    verbose = TRUE,
                     inla.mode = "experimental"){
   
   INLA::inla.setOption(inla.mode = inla.mode)
@@ -118,7 +118,7 @@ ppmLGCP <- function(points = NULL,
     return(c)
   }
   
-  cov.df <- as.data.frame(covariates, xy = T)
+  cov.df <- as.data.frame(covariates, xy = TRUE)
   
   zeroes <- terra::classify(covariates[[1]], rcl = matrix(c(-Inf, Inf, 0), ncol = 3))
   ones <- zeroes + 1
@@ -183,7 +183,7 @@ ppmLGCP <- function(points = NULL,
       quad.xy <- mesh$loc[, 1:2] |> data.frame()
       names(quad.xy) <- c("x", "y")
       
-      nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = F)[, 1] |> is.na()
+      nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = FALSE)[, 1] |> is.na()
       
       quad.xy <- quad.xy[nas.quad, ]
       
@@ -240,7 +240,7 @@ ppmLGCP <- function(points = NULL,
           quad.xy <- mesh$loc[, 1:2] |> data.frame()
           names(quad.xy) <- c("x", "y")
           
-          nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = F)[, 1] |> is.na()
+          nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = FALSE)[, 1] |> is.na()
           
           quad.xy <- quad.xy[nas.quad, ]
           
@@ -295,7 +295,7 @@ ppmLGCP <- function(points = NULL,
           quad.xy <- mesh$loc[, 1:2] |> data.frame()
           names(quad.xy) <- c("x", "y")
           
-          nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = F)[, 1] |> is.na()
+          nas.quad <- ! terra::extract(covariates[[1]], quad.xy, ID = FALSE)[, 1] |> is.na()
           
           quad.xy <- quad.xy[nas.quad, ]
           
@@ -414,7 +414,7 @@ ppmLGCP <- function(points = NULL,
       }
     }
     
-    gc(reset = T)
+    gc(reset = TRUE)
   }
 
   #Distance to quadrature points
@@ -423,7 +423,7 @@ ppmLGCP <- function(points = NULL,
   terra::crs(points.v) <- terra::crs(covariates)
 
   points.r <- terra::rasterize(points.v, covariates, fun = "count")
-  points.df <- as.data.frame(points.r, xy = T)
+  points.df <- as.data.frame(points.r, xy = TRUE)
   
   #Covariance priors
   if(covariance.func == "pcmatern"){
@@ -444,7 +444,7 @@ ppmLGCP <- function(points = NULL,
 
   #Putting data together
   #Presence A matrix
-  presence.df <- terra::extract(covariates, points.v, ID = F)
+  presence.df <- terra::extract(covariates, points.v, ID = FALSE)
   if(dist.ar){
     presence.df <- data.frame(points[, c("x", "y")], presence.df, dist = pres.d)
   } else {
@@ -458,7 +458,7 @@ ppmLGCP <- function(points = NULL,
   A_point <- INLA::inla.spde.make.A(mesh, loc = presence.sp)
   
   #quadrature A matrix
-  quad.data <- terra::extract(covariates, quad.xy, ID = F)
+  quad.data <- terra::extract(covariates, quad.xy, ID = FALSE)
   if(dist.ar){
     quad.data <- data.frame(quad.xy, quad.data, dist = quad.d)
   } else {
@@ -472,7 +472,7 @@ ppmLGCP <- function(points = NULL,
   A_quad <- INLA::inla.spde.make.A(mesh, loc = quad.sp)
   
   #Predictors matrix
-  covs.df <- as.data.frame(covariates, xy = T) |> stats::na.omit()
+  covs.df <- as.data.frame(covariates, xy = TRUE) |> stats::na.omit()
   
   if(dist.ar){
     if(dist.units == "km"){

@@ -22,21 +22,22 @@
 #' 
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
-#' models <- ppmBatchFit(points = ,
+#' 
+#' models <- ppmBatchFit(points = p,
 #'                       covariates = r,
 #'                       formulas = forms,
 #'                       bias.data = bias,
 #'                       bias.correction = "weights",
-#'                       parallel = F,
+#'                       parallel = FALSE,
 #'                       top.models = 3)
 #' 
 #' best <- batchBest(batch = models,
-#'                   as.ppmSingle = T)
+#'                   as.ppmSingle = TRUE)
 #' 
-#' spatstat.model::summary(best)
+#' summary(best)
 #' @export
 
-batchBest <- function(batch = NULL, as.ppmSingle = T){
+batchBest <- function(batch = NULL, as.ppmSingle = TRUE){
   if(is.null(batch)){
     stop("Please provide a batch of models fitted with ppmBatchFit")
   }

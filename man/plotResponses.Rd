@@ -12,7 +12,7 @@ plotResponses(
   bias.correction = NULL,
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
     NULL, weights = NULL, edge = TRUE, p.keep = 0.5),
-  save.plot = F,
+  save.plot = FALSE,
   plot.pars = list(name = "ResponsePlot.pdf", width = 5, height = 5)
 )
 }
@@ -54,7 +54,7 @@ plotResponses(points = p,
               covariates = r,
               bias.data = bias,
               bias.correction = "weights",
-              save.plot = T,
+              save.plot = TRUE,
               plot.pars = list(name = "inst/extdata/ResponsePlot.pdf", 
                                width = 5, 
                                height = 5)) 

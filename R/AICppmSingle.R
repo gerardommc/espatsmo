@@ -15,7 +15,7 @@
 #'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                      bias.data = bias, #Data frame with sampling localities or raster layer
 #'                      bias.correction = "weights",
-#'                      as.ppmSingle = F)
+#'                      as.ppmSingle = FALSE)
 #' 
 #' AIC(model)
 #' @export

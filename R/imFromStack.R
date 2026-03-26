@@ -16,7 +16,7 @@ imFromStack <- function(r = NULL){
         stop("Cannot generate imList without a SpatRaster")
     }
     
-    r.df <- as.data.frame(r, xy = T)
+    r.df <- as.data.frame(r, xy = TRUE)
     
     ux = sort(unique(r.df$x)) #Extracting unique coordinates
     uy = sort(unique(r.df$y))

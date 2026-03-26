@@ -39,7 +39,7 @@
 #'                       formulas = forms,
 #'                       bias.data = bias,
 #'                       bias.correction = "weights",
-#'                       parallel = F,
+#'                       parallel = FALSE,
 #'                       top.models = 3)
 #' @export
 
@@ -53,7 +53,7 @@ ppmBatchFit <- function(points= NULL,
                                                 sigma = NULL, varcov = NULL, 
                                                 weights = NULL, edge = TRUE,
                                                 p.keep = 0.5), #Only relevant for Background bias correction
-                        parallel = T, 
+                        parallel = TRUE, 
                         cores = 2, 
                         top.models = 10,
                         ppm.conf = list(correction="border",
@@ -99,7 +99,7 @@ ppmBatchFit <- function(points= NULL,
                                weights = weight.bias.conf$weights, 
                                edge = weight.bias.conf$edge,
                                p.keep = weight.bias.conf$p.keep,
-                               as.imList = T)
+                               as.imList = TRUE)
         
         w <- spatstat.geom::as.owin(imList[[1]])
         
@@ -259,12 +259,12 @@ ppmBatchFit <- function(points= NULL,
   }
   
   perf <- sapply(models, spatstat.model::AIC.ppm) 
-  perf.sort <- perf |> sort(decreasing = F)
+  perf.sort <- perf |> sort(decreasing = FALSE)
   top <- perf.sort[1:top.models]
   
   ids <- which(perf %in% top) |> rev()
   
-  gc(reset = T)
+  gc(reset = TRUE)
   
   ret.list <- list(
     models = models[ids],

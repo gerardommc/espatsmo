@@ -4,7 +4,7 @@
 \alias{NegPosNorm}
 \title{Force a SpatRaster or imList to have values between (-1, 1)}
 \usage{
-NegPosNorm(r = NULL, target.crs = NULL, as.imList = F)
+NegPosNorm(r = NULL, target.crs = NULL, as.imList = FALSE)
 }
 \arguments{
 \item{r}{A single or multi-band SpatRaster or imList}
@@ -27,6 +27,6 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 r.np <- NegPosNorm(r = r,
                    target.crs = "EPSG:6372",
-                   as.imList = F)
+                   as.imList = FALSE)
 
 }

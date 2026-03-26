@@ -31,12 +31,12 @@ compat <- findCompatibles(covariates = r,
 forms <- getPolyFormulas(respDF = resp, 
                          compatMat = compat)
 
-models <- ppmBatchFit(points = ,
+models <- ppmBatchFit(points = p,
                       covariates = r,
                       formulas = forms,
                       bias.data = bias,
                       bias.correction = "weights",
-                      parallel = F,
+                      parallel = FALSE,
                       top.models = 3)
 
 AIC(models)

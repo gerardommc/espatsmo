@@ -15,7 +15,7 @@
 #'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                  bias.data = bias,
 #'                  bias.correction = "weights",
-#'                  as.ppmSingle = F)
+#'                  as.ppmSingle = FALSE)
 #' 
 #' summary(model)
 #' @export
@@ -26,16 +26,16 @@ summary.ppmLGCP <- function(object = NULL, effects = NULL){
   if(is.null(effects)){
     pl <- list(`Fixed effects` = object$model$summary.fixed,
                `Random effects` = object$model$summary.hyperpar)
-    print(pl, quote = F)
+    print(pl, quote = FALSE)
   }
   
   if(!is.null(effects)){
       if(effects == "fixed"){
-          print(object$model$summary.fixed, quote = F)
+          print(object$model$summary.fixed, quote = FALSE)
       }
       
       if(effects == "random"){
-          print(object$model$summary.hyperpar, quote = F)
+          print(object$model$summary.hyperpar, quote = FALSE)
       }
     }
 }

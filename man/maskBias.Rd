@@ -15,7 +15,7 @@ maskBias(
   weights = NULL,
   edge = TRUE,
   p.keep = 0.5,
-  as.imList = F
+  as.imList = FALSE
 )
 }
 \arguments{
@@ -63,5 +63,5 @@ masked <- maskBias(covariates = r,
                    bias.data = bias, 
                    points = p,
                    p.keep = 0.5,
-                   as.imList = F)
+                   as.imList = FALSE)
 }

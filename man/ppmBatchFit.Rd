@@ -12,7 +12,7 @@ ppmBatchFit(
   bias.correction = NULL,
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
     NULL, weights = NULL, edge = TRUE, p.keep = 0.5),
-  parallel = T,
+  parallel = TRUE,
   cores = 2,
   top.models = 10,
   ppm.conf = list(correction = "border", use.gam = FALSE, method = "logi", forcefit =
@@ -75,6 +75,6 @@ models <- ppmBatchFit(points = p,
                       formulas = forms,
                       bias.data = bias,
                       bias.correction = "weights",
-                      parallel = F,
+                      parallel = FALSE,
                       top.models = 3)
 }

@@ -4,7 +4,7 @@
 \alias{batchBest}
 \title{Extract the model with the lowest AIC from a ppmBatch object}
 \usage{
-batchBest(batch = NULL, as.ppmSingle = T)
+batchBest(batch = NULL, as.ppmSingle = TRUE)
 }
 \arguments{
 \item{batch}{A ppmBatch object from which to extract the "best" model, on the basis of the AIC.}
@@ -36,16 +36,17 @@ compat <- findCompatibles(covariates = r,
 
 forms <- getPolyFormulas(respDF = resp, 
                          compatMat = compat)
-models <- ppmBatchFit(points = ,
+
+models <- ppmBatchFit(points = p,
                       covariates = r,
                       formulas = forms,
                       bias.data = bias,
                       bias.correction = "weights",
-                      parallel = F,
+                      parallel = FALSE,
                       top.models = 3)
 
 best <- batchBest(batch = models,
-                  as.ppmSingle = T)
+                  as.ppmSingle = TRUE)
 
-spatstat.model::summary(best)
+summary(best)
 }

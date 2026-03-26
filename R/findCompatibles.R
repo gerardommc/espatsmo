@@ -38,7 +38,7 @@ findCompatibles <- function(covariates = NULL,
   } 
 
   if(inherits(covariates, "SpatRaster")){
-    rdf <- as.data.frame(covariates, xy = F) |> stats::na.omit()
+    rdf <- as.data.frame(covariates, xy = FALSE) |> stats::na.omit()
   }
 
   if(inherits(covariates, "data.frame")){
@@ -47,7 +47,7 @@ findCompatibles <- function(covariates = NULL,
 
   if(inherits(covariates, "imList")){
     r <- as.SpatRast(covariates)
-    rdf <- as.data.frame(r, xy = F)
+    rdf <- as.data.frame(r, xy = FALSE)
   }
 
   cormat <- stats::cor(rdf)

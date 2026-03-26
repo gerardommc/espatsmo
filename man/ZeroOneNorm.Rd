@@ -4,7 +4,7 @@
 \alias{ZeroOneNorm}
 \title{Force minimum and maximum values of a raster layer to be in the 0-1 interval}
 \usage{
-ZeroOneNorm(r = NULL, as.imList = F, target.crs = NULL)
+ZeroOneNorm(r = NULL, as.imList = FALSE, target.crs = NULL)
 }
 \arguments{
 \item{r}{A SpatRast or imList object.}
@@ -26,6 +26,6 @@ imList
 r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
 r.zon <- ZeroOneNorm(r = r,
-                     as.imList = F,
+                     as.imList = FALSE,
                      target.crs = "EPSG:6372")
 }

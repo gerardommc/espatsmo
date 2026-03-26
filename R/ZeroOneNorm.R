@@ -12,12 +12,12 @@
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' r.zon <- ZeroOneNorm(r = r,
-#'                      as.imList = F,
+#'                      as.imList = FALSE,
 #'                      target.crs = "EPSG:6372")
 #' @export 
 
 ZeroOneNorm <- function(r = NULL, 
-                        as.imList = F,
+                        as.imList = FALSE,
                         target.crs = NULL){
 
   if(is.null(r)){
@@ -32,8 +32,8 @@ ZeroOneNorm <- function(r = NULL,
     r <- terra::rast(r)
   }
 
-  mi <- terra::global(r, min, na.rm = T)[, 1]
-  ma <- terra::global(r, max, na.rm = T)[, 1]
+  mi <- terra::global(r, min, na.rm = TRUE)[, 1]
+  ma <- terra::global(r, max, na.rm = TRUE)[, 1]
   r.norm <- (r - mi)/(ma - mi)
 
   if(!as.imList){

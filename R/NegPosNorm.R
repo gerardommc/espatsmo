@@ -13,13 +13,13 @@
 #' 
 #' r.np <- NegPosNorm(r = r,
 #'                    target.crs = "EPSG:6372",
-#'                    as.imList = F)
+#'                    as.imList = FALSE)
 #' 
 #' @export
 
 NegPosNorm <- function(r = NULL, 
                        target.crs = NULL,
-                       as.imList = F){
+                       as.imList = FALSE){
 
   if(inherits(r, "imList")){
     r <- as.SpatRast(r)
@@ -30,7 +30,7 @@ NegPosNorm <- function(r = NULL,
     stop("Cannot normalise with the supplied object, please provide a SpatRaster")
   }
 
-  ma <- terra::global(r, max, ID = F)[, 1]
+  ma <- terra::global(r, max, ID = FALSE)[, 1]
   r1 <- r - ma/2
   r2 <- r1/ma
 

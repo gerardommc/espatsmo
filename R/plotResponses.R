@@ -28,7 +28,7 @@
 #'               covariates = r,
 #'               bias.data = bias,
 #'               bias.correction = "weights",
-#'               save.plot = T,
+#'               save.plot = TRUE,
 #'               plot.pars = list(name = "inst/extdata/ResponsePlot.pdf", 
 #'                                width = 5, 
 #'                                height = 5)) 
@@ -42,7 +42,7 @@ plotResponses <- function(points = NULL,
                                                   sigma = NULL, varcov = NULL, 
                                                   weights = NULL, edge = TRUE,
                                                   p.keep = 0.5),
-                          save.plot = F,
+                          save.plot = FALSE,
                           plot.pars = list(name = "ResponsePlot.pdf", width = 5, height = 5)){
 
   
@@ -121,7 +121,7 @@ plotResponses <- function(points = NULL,
                             weights = weight.bias.conf$weights,
                             edge = weight.bias.conf$edge,
                             p.keep = weight.bias.conf$p.keep,
-                            as.imList = T)
+                            as.imList = TRUE)
         
       w <- spatstat.geom::as.owin(imList[[1]])
       
