@@ -22,24 +22,18 @@ Maintainer: Gerardo Martín <gerardo.mmc@enesmerida.unam.mx>
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Suggests:
+      fmesher,
+      INLA
 Imports:
-      spatstat,
       spatstat.geom,
       spatstat.model,
       spatstat.explore,
-      terra,
-      foreach,
-      doParallel,
-      fmesher,
-      INLA,
-      sf
+      doParallel
 Depends:
       spatstat,
       terra,
       foreach,
-      doParallel,
-      fmesher,
-      INLA,
       sf
 Additional_repositories:
       https://inla.r-inla-download.org/R/stable
