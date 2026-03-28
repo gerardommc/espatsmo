@@ -199,17 +199,17 @@ ppmSingleFit <- function(points= NULL,
       }
     }    
   
-  m <- spatstat.model::ppm(Q, 
-                           trend = stats::as.formula(formula), 
-                           covariates = imList,
-                           correction = ppm.conf$correction,
-                           use.gam = ppm.conf$use.gam,
-                           method = ppm.conf$method,
-                           forcefit = ppm.conf$forcefit,
-                           improve.type = ppm.conf$improve.type,
-                           improve.args=ppm.conf$improve.args,
-                           prior.mean = ppm.conf$prior.mean,
-                           prior.var = ppm.conf$prior.var)
+  m <- spatstat.model::ppm.quad(Q, 
+                                trend = stats::as.formula(formula), 
+                                covariates = imList,
+                                correction = ppm.conf$correction,
+                                use.gam = ppm.conf$use.gam,
+                                method = ppm.conf$method,
+                                forcefit = ppm.conf$forcefit,
+                                improve.type = ppm.conf$improve.type,
+                                improve.args=ppm.conf$improve.args,
+                                prior.mean = ppm.conf$prior.mean,
+                                prior.var = ppm.conf$prior.var)
   
   if(as.ppmSingle){
         ret.list <- list(model = m,

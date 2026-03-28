@@ -224,16 +224,16 @@ ppmBatchFit <- function(points= NULL,
     models <- foreach::foreach(i = seq_along(formulas)) %dopar% {
       
       form <- stats::as.formula(formulas[i])
-      m <- spatstat.model::ppm(Q, trend = form, 
-                               covariates = imList,
-                               correction = ppm.conf$correction,
-                               use.gam = ppm.conf$use.gam,
-                               method = ppm.conf$method,
-                               forcefit = ppm.conf$forcefit,
-                               improve.type = ppm.conf$improve.type,
-                               improve.args=ppm.conf$improve.args,
-                               prior.mean = ppm.conf$prior.mean,
-                               prior.var = ppm.conf$prior.var)
+      m <- spatstat.model::ppm.quad(Q, trend = form, 
+                                    covariates = imList,
+                                    correction = ppm.conf$correction,
+                                    use.gam = ppm.conf$use.gam,
+                                    method = ppm.conf$method,
+                                    forcefit = ppm.conf$forcefit,
+                                    improve.type = ppm.conf$improve.type,
+                                    improve.args=ppm.conf$improve.args,
+                                    prior.mean = ppm.conf$prior.mean,
+                                    prior.var = ppm.conf$prior.var)
       
       return(m)
     }
@@ -243,16 +243,16 @@ ppmBatchFit <- function(points= NULL,
   
       form <- stats::as.formula(formulas[i])
   
-      m <- spatstat.model::ppm(Q, trend = form, 
-                               covariates = imList,
-                               correction = ppm.conf$correction,
-                               use.gam = ppm.conf$use.gam,
-                               method = ppm.conf$method,
-                               forcefit = ppm.conf$forcefit,
-                               improve.type = ppm.conf$improve.type,
-                               improve.args=ppm.conf$improve.args,
-                               prior.mean = ppm.conf$prior.mean,
-                               prior.var = ppm.conf$prior.var)
+      m <- spatstat.model::ppm.quad(Q, trend = form, 
+                                    covariates = imList,
+                                    correction = ppm.conf$correction,
+                                    use.gam = ppm.conf$use.gam,
+                                    method = ppm.conf$method,
+                                    forcefit = ppm.conf$forcefit,
+                                    improve.type = ppm.conf$improve.type,
+                                    improve.args=ppm.conf$improve.args,
+                                    prior.mean = ppm.conf$prior.mean,
+                                    prior.var = ppm.conf$prior.var)
       
       return(m)
     }
