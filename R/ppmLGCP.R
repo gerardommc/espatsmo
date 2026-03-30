@@ -63,7 +63,7 @@ ppmLGCP <- function(points = NULL,
                     covariance.func = "pcmatern", #options = "matern", "pcmatern"
                     weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                             sigma = NULL, varcov = NULL, 
-                                            weights = NULL, edge = TRUE),
+                                            weights = NULL, edge = TRUE, zo.norm = FALSE),
                     prior.conf = list(alpha = 2,
                                       prior.range = c(10000, 0.01),
                                       prior.sigma = c(0.05, 0.01)),
@@ -205,7 +205,8 @@ ppmLGCP <- function(points = NULL,
                             sigma = weight.bias.conf$sigma,
                             varcov = weight.bias.conf$sigma, 
                             weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge)
+                            edge = weight.bias.conf$edge,
+                            zo.norm = weight.bias.conf$zo.norm)
         
         area.weights <- iml[[1]]
         area.weights[] <- Qa$w[beg:en]
@@ -262,7 +263,8 @@ ppmLGCP <- function(points = NULL,
                             sigma = weight.bias.conf$sigma,
                             varcov = weight.bias.conf$sigma, 
                             weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge)
+                            edge = weight.bias.conf$edge,
+                            zo.norm = weight.bias.conf$zo.norm)
         
         area.weights <- iml[[1]]
         area.weights[] <- Qa$w[beg:en]
@@ -315,7 +317,8 @@ ppmLGCP <- function(points = NULL,
                                                 sigma = weight.bias.conf$sigma,
                                                 varcov = weight.bias.conf$varcov, 
                                                 weights = weight.bias.conf$weights, 
-                                                edge = weight.bias.conf$edge) |> terra::rast()
+                                                edge = weight.bias.conf$edge,
+                         zo.norm = weight.bias.conf$zo.norm) |> terra::rast()
         
         dens.df <- as.data.frame(dens.r, xy = TRUE)
         

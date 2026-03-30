@@ -16,6 +16,7 @@
 #' @param varcov A two by two matrix for the covariance between x and y sampling localities if these are correlated
 #' @param weights A numeric vector with the length of sampling localities with the weights for each observation.
 #' @param edge Logical, whether to perform edge correction
+#' @param zo.norm Logical, whether to coerce observation effort values to 0-1 scale
 #' @return A quadscheme but with modified, spatially variable area weights.
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |> terra::rast() |> scale()
@@ -43,7 +44,8 @@ replaceQAreas <- function(Q = NULL,
                           sigma = NULL, 
                           varcov = NULL, 
                           weights = NULL, 
-                          edge = TRUE){
+                          edge = TRUE,
+                          zo.norm = FALSE){
 
   
   if(inherits(bias.data, "data.frame")){
@@ -80,7 +82,12 @@ replaceQAreas <- function(Q = NULL,
   if(inherits(bias.data, "SpatRaster")){
       im.r <- terra::rast(im)
       terra::crs(im.r) <- terra::crs(bias.data)
-      bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
+    
+      if(zo.norm){
+        bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
+      } else {
+        bias.data <- terra::resample(bias.data, im.r) 
+      }
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 
@@ -105,7 +112,12 @@ replaceQAreas <- function(Q = NULL,
   if(inherits(bias.data, "im")){
       im.r <- terra::rast(im)
       bias.data <- terra::rast(bias.data)
-      bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
+    
+      if(zo.norm){
+        bias.data <- terra::resample(bias.data, im.r) |> ZeroOneNorm()
+      } else {
+        bias.data <- terra::resample(bias.data, im.r) 
+      }
       
       sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
       bias.data <- bias.data/sum.bias$sum 

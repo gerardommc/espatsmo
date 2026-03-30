@@ -13,7 +13,8 @@ replaceQAreas(
   sigma = NULL,
   varcov = NULL,
   weights = NULL,
-  edge = TRUE
+  edge = TRUE,
+  zo.norm = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ The defaiult value is "gaussian", but all the types of kernels in spatstat.explo
 \item{weights}{A numeric vector with the length of sampling localities with the weights for each observation.}
 
 \item{edge}{Logical, whether to perform edge correction}
+
+\item{zo.norm}{Logical, whether to coerce observation effort values to 0-1 scale}
 }
 \value{
 A quadscheme but with modified, spatially variable area weights.

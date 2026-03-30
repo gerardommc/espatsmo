@@ -11,7 +11,7 @@ plotResponses(
   bias.data = NULL,
   bias.correction = NULL,
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
-    NULL, weights = NULL, edge = TRUE, p.keep = 0.5),
+    NULL, weights = NULL, edge = TRUE, p.keep = 0.5, zo.norm = FALSE),
   save.plot = FALSE,
   plot.pars = list(name = "ResponsePlot.pdf", width = 5, height = 5)
 )
@@ -25,7 +25,7 @@ plotResponses(
 
 \item{bias.correction}{Character string, indicating whether to correct bias with background filtering of by altering the area weight.}
 
-\item{weight.bias.conf}{A list arguments to pass to density.ppp to configure weight bias correction methos.}
+\item{weight.bias.conf}{A list arguments to pass to density.ppp to configure weight bias correction methods.}
 
 \item{save.plot}{Logical to indicate if a plot of the responses is to be saved.}
 

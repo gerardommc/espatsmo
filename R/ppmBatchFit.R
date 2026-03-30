@@ -52,13 +52,13 @@ ppmBatchFit <- function(points= NULL,
                         weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                                 sigma = NULL, varcov = NULL, 
                                                 weights = NULL, edge = TRUE,
-                                                p.keep = 0.5), #Only relevant for Background bias correction
+                                                p.keep = 0.5, zo.norm = FALSE), #Only relevant for Background bias correction
                         parallel = TRUE, 
                         cores = 2, 
                         top.models = 10,
                         ppm.conf = list(correction="border",
                                         use.gam=FALSE,
-                                        method="logi",
+                                        method="mpl",
                                         forcefit=FALSE,
                                         improve.type = "none",
                                         improve.args=list(),
@@ -150,7 +150,8 @@ ppmBatchFit <- function(points= NULL,
                               sigma = weight.bias.conf$sigma,
                               varcov = weight.bias.conf$sigma, 
                               weights = weight.bias.conf$weights, 
-                              edge = weight.bias.conf$edge)
+                              edge = weight.bias.conf$edge,
+                              zo.norm = weight.bias.conf$zo.norm)
           Q <- Qa
         }
         
@@ -183,7 +184,8 @@ ppmBatchFit <- function(points= NULL,
                               sigma = weight.bias.conf$sigma,
                               varcov = weight.bias.conf$sigma, 
                               weights = weight.bias.conf$weights, 
-                              edge = weight.bias.conf$edge)
+                              edge = weight.bias.conf$edge,
+                              zo.norm = weight.bias.conf$zo.norm)
           Q <- Qa
         }
       }
@@ -223,17 +225,18 @@ ppmBatchFit <- function(points= NULL,
     
     models <- foreach::foreach(i = seq_along(formulas)) %dopar% {
       
-      form <- stats::as.formula(formulas[i])
-      m <- spatstat.model::ppm.quad(Q, trend = form, 
-                                    covariates = imList,
-                                    correction = ppm.conf$correction,
-                                    use.gam = ppm.conf$use.gam,
-                                    method = ppm.conf$method,
-                                    forcefit = ppm.conf$forcefit,
-                                    improve.type = ppm.conf$improve.type,
-                                    improve.args=ppm.conf$improve.args,
-                                    prior.mean = ppm.conf$prior.mean,
-                                    prior.var = ppm.conf$prior.var)
+      form <- paste0("Q", formulas[i]) |> stats::as.formula()
+      
+      m <- spatstat.model::ppm.formula(form, 
+                                      covariates = imList,
+                                      correction = ppm.conf$correction,
+                                      use.gam = ppm.conf$use.gam,
+                                      method = ppm.conf$method,
+                                      forcefit = ppm.conf$forcefit,
+                                      improve.type = ppm.conf$improve.type,
+                                      improve.args=ppm.conf$improve.args,
+                                      prior.mean = ppm.conf$prior.mean,
+                                      prior.var = ppm.conf$prior.var)
       
       return(m)
     }
@@ -241,9 +244,9 @@ ppmBatchFit <- function(points= NULL,
   
     models <- foreach::foreach(i = seq_along(formulas)) %do% {
   
-      form <- stats::as.formula(formulas[i])
+      form <- paste0("Q", formulas[i]) |> stats::as.formula()
   
-      m <- spatstat.model::ppm.quad(Q, trend = form, 
+      m <- spatstat.model::ppm.formula(form, 
                                     covariates = imList,
                                     correction = ppm.conf$correction,
                                     use.gam = ppm.conf$use.gam,

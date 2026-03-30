@@ -16,7 +16,7 @@ ppmLGCP(
   covariate.zero = NULL,
   covariance.func = "pcmatern",
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
-    NULL, weights = NULL, edge = TRUE),
+    NULL, weights = NULL, edge = TRUE, zo.norm = FALSE),
   prior.conf = list(alpha = 2, prior.range = c(10000, 0.01), prior.sigma = c(0.05, 0.01)),
   mesh.par = list(edge = 5000, offset = 10000),
   coordinates = "m",

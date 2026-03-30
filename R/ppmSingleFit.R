@@ -41,10 +41,10 @@ ppmSingleFit <- function(points= NULL,
                          weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                         sigma = NULL, varcov = NULL,
                                         weights = NULL, edge = TRUE ,
-                                        p.keep = 0.5),
+                                        p.keep = 0.5, zo.norm = FALSE),
                         ppm.conf = list(correction="border",
                                         use.gam=FALSE,
-                                        method="logi",
+                                        method="mpl",
                                         forcefit=FALSE,
                                         improve.type = "none",
                                         improve.args=list(),
@@ -132,7 +132,8 @@ ppmSingleFit <- function(points= NULL,
                               sigma = weight.bias.conf$sigma,
                               varcov = weight.bias.conf$sigma, 
                               weights = weight.bias.conf$weights, 
-                              edge = weight.bias.conf$edge)
+                              edge = weight.bias.conf$edge,
+                              zo.norm = weight.bias.conf$zo.norm)
           Q <- Qa
         }
         
@@ -165,7 +166,8 @@ ppmSingleFit <- function(points= NULL,
                               sigma = weight.bias.conf$sigma,
                               varcov = weight.bias.conf$sigma, 
                               weights = weight.bias.conf$weights, 
-                              edge = weight.bias.conf$edge)
+                              edge = weight.bias.conf$edge,
+                              zo.norm = weight.bias.conf$zo.norm)
           Q <- Qa
         }
       }
@@ -199,8 +201,9 @@ ppmSingleFit <- function(points= NULL,
       }
     }    
   
-  m <- spatstat.model::ppm.quad(Q, 
-                                trend = stats::as.formula(formula), 
+  form <- paste0("Q", formula) |> stats::as.formula()
+  
+  m <- spatstat.model::ppm.formula(form, 
                                 covariates = imList,
                                 correction = ppm.conf$correction,
                                 use.gam = ppm.conf$use.gam,

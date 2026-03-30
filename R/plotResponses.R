@@ -13,7 +13,7 @@
 #' @param covariates A set of covariates as SpatRaster or imList object.
 #' @param bias.data The data representing the variability of observation effort, which may be a two column data.frame of sampling localities a SpatRaster or imList.
 #' @param bias.correction Character string, indicating whether to correct bias with background filtering of by altering the area weight.
-#' @param weight.bias.conf A list arguments to pass to density.ppp to configure weight bias correction methos.
+#' @param weight.bias.conf A list arguments to pass to density.ppp to configure weight bias correction methods.
 #' @param save.plot Logical to indicate if a plot of the responses is to be saved.
 #' @param plot.pars A list to configure plot size and file name if save.plot is TRUE.
 #' @param p.keep Numeric double in the interval 0-1, to specify the proportion of pixels that will be retained in the filtered covariates.
@@ -41,7 +41,7 @@ plotResponses <- function(points = NULL,
                           weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                                   sigma = NULL, varcov = NULL, 
                                                   weights = NULL, edge = TRUE,
-                                                  p.keep = 0.5),
+                                                  p.keep = 0.5, zo.norm = FALSE),
                           save.plot = FALSE,
                           plot.pars = list(name = "ResponsePlot.pdf", width = 5, height = 5)){
 
@@ -98,7 +98,8 @@ plotResponses <- function(points = NULL,
                          sigma = weight.bias.conf$sigma,
                          varcov = weight.bias.conf$varcov,
                          weights = weight.bias.conf$weights,
-                         edge = weight.bias.conf$edge)
+                         edge = weight.bias.conf$edge,
+                         zo.norm = weight.bias.conf$zo.norm)
     }
       
      if(bias.correction == "background"){

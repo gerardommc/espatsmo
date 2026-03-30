@@ -12,8 +12,8 @@ ppmSingleFit(
   bias.correction = NULL,
   as.ppmSingle = TRUE,
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
-    NULL, weights = NULL, edge = TRUE, p.keep = 0.5),
-  ppm.conf = list(correction = "border", use.gam = FALSE, method = "logi", forcefit =
+    NULL, weights = NULL, edge = TRUE, p.keep = 0.5, zo.norm = FALSE),
+  ppm.conf = list(correction = "border", use.gam = FALSE, method = "mpl", forcefit =
     FALSE, improve.type = "none", improve.args = list(), prior.mean = NULL, prior.var =
     NULL)
 )
