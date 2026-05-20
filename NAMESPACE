@@ -2,6 +2,7 @@
 
 S3method(AIC,ppmBatch)
 S3method(AIC,ppmSingle)
+S3method(plot,spatPart)
 S3method(summary,ppmBatch)
 S3method(summary,ppmLGCP)
 S3method(summary,ppmSingle)
@@ -21,3 +22,4 @@ export(ppmLGCP)
 export(ppmSingleFit)
 export(projectPoints)
 export(replaceQAreas)
+export(spatialPartition)

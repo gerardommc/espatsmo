@@ -37,4 +37,4 @@ Depends:
       sf
 Additional_repositories:
       https://inla.r-inla-download.org/R/stable
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0
