@@ -18,7 +18,7 @@
 #'                          
 #' plot(part, partition = c(1, 0))
 #' @export
-#' @method plot.spatPart
+#' @method plot spatPart
 
 plot.spatPart <- function(x, partition = 1){
   
