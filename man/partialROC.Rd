@@ -64,6 +64,7 @@ proc <- partialROC(raster = pred,
                    points = valid.points,
                    plot.pars = list(name = "PartialROC.pdf", 
                                     width = 5, 
-                                    height = 5))
+                                    height = 5),
+                   save.plot = FALSE)
 
 }

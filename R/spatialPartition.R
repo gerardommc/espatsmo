@@ -16,7 +16,7 @@
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #'
-#' part <- spatialPartition(covariates = covariates,
+#' part <- spatialPartition(covariates = r,
 #'                          points = p, 
 #'                          no.blocks = 100,
 #'                          part.criteria = "random",
@@ -53,7 +53,7 @@ spatialPartition <- function(covariates = NULL,
     
     zo <- rep(c(1, 0), length.out = nrow(xy))
     
-    vor$zo<- zo[shuffle(length(zo))]
+    vor$zo<- zo[shuffle(length(zo), set.seed = TRUE, seed = seed)]
     
     vor.1 <- vor[vor$zo == 1]
     vor.0 <- vor[vor$zo == 0]
@@ -147,7 +147,7 @@ spatialPartition <- function(covariates = NULL,
     
     zo <- rep(c(1, 0), length.out = len.x * len.y)
     
-    vor$zo<- zo[shuffle(length(zo))]
+    vor$zo<- zo[shuffle(length(zo), set.seed = TRUE, seed = seed)]
     
     vor.1 <- vor[vor$zo == 1]
     vor.0 <- vor[vor$zo == 0]
