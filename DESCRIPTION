@@ -38,3 +38,4 @@ Depends:
 Additional_repositories:
       https://inla.r-inla-download.org/R/stable
 Config/roxygen2/version: 8.0.0
+RoxygenNote: 7.3.3

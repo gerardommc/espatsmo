@@ -4,6 +4,8 @@
 #' @param points A two-column data frame where the first two columns have to be the x and y coordinates respectively
 #' @param p.points Numeric, double representing the proportion of validation points used in each iteration
 #' @param r.points Numeric, an integer representing the number of random points to be drawn from the raster predictions to calculate predicted areas
+#' @param n.thresholds Numeric, an integer indicating the number of model prediction threholds
+#' @param thres.criteria Character string with values "regular" or "quantiles" to indicate how model predictions will be thresholded
 #' @param iterations Numeric, integer the number of times the random sampling is repeated
 #' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)
 #' @param log.transform A logical value to indicate whether to log-transform the raster values
@@ -36,7 +38,19 @@
 #' proc <- partialROC(raster = pred,
 #'                    points = valid.points,
 #'                    r.points = 5000,
-#'                    plot.pars = list(name = "PartialROC.pdf", 
+#'                    n.thresholds = 100,
+#'                    thres.criteria = "regular",
+#'                    plot.pars = list(name = "PartialROC-regular.pdf", 
+#'                                     width = 5, 
+#'                                     height = 5),
+#'                    save.plot = FALSE)
+#' 
+#' proc1 <- partialROC(raster = pred,
+#'                    points = valid.points,
+#'                    r.points = 5000,
+#'                    n.thresholds = 100,
+#'                    thres.criteria = "quantiles",
+#'                    plot.pars = list(name = "PartialROC-quantiles.pdf", 
 #'                                     width = 5, 
 #'                                     height = 5),
 #'                    save.plot = FALSE)
@@ -50,6 +64,8 @@ partialROC <- function(raster,
                        iterations = 39,
                        buf = NULL, 
                        log.transform = TRUE,
+                       n.thresholds = 100,
+                       thres.criteria = "regular",
                        omission = 0, 
                        save.plot = TRUE, 
                        plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)){
@@ -67,7 +83,9 @@ partialROC <- function(raster,
   
   if(omission > 0){
     vals <- terra::extract(raster, points[, 1:2])[,2]
-    q <- stats::quantile(vals, 1-omission, na.rm = TRUE)
+    q <- stats::quantile(x = vals, 
+                         probs = 1-omission, 
+                         na.rm = TRUE)
     om.r <- raster < q
     om.r <- terra::classify(om.r, rcl = matrix(c(-Inf, 0, NA), ncol = 3, byrow = TRUE))
     raster <- terra::mask(raster, om.r)
@@ -80,13 +98,22 @@ partialROC <- function(raster,
   }
   
   r <- ZeroOneNorm(raster)
-  r <- round(r, 2)
-  
-  thres <- seq(0, 1, len = 101)
+  r <- round(r, ceiling(log10(n.thresholds)))
   
   #Thresholding suitability layer
-  
+
   r.xy <- r |> as.data.frame(xy = TRUE)
+
+  if(thres.criteria == "regular"){
+    thres <- seq(0, 1, len = n.thresholds + 1)
+  }
+
+  if(thres.criteria == "quantiles"){
+    thrs <- seq(0, 1, len = n.thresholds + 1)
+    thres <- stats::quantile(x = r.xy[, 3], 
+                             probs = thrs, 
+                             na.rm = TRUE)
+  }
   
   samp <- base::sample(x = 1:nrow(r.xy),
                        size = r.points,
@@ -107,7 +134,7 @@ partialROC <- function(raster,
   
   area.pred <- colMeans(pred.thrs)
   
-  dArea <- area.pred[1:100] - area.pred[2:101]
+  dArea <- area.pred[1:n.thresholds] - area.pred[2:(n.thresholds + 1)]
   
   mp <- matrix(0, nrow = iterations, ncol = length(area.pred))
   mr <- matrix(0, nrow = iterations, ncol = length(area.pred))
@@ -132,8 +159,8 @@ partialROC <- function(raster,
     
     #Calculating areas
     
-    rects.pres <- dArea * means.pres[-101]
-    rects.rand <- dArea * means.rand[-101]
+    rects.pres <- dArea * means.pres[-(n.thresholds  + 1)]
+    rects.rand <- dArea * means.rand[-(n.thresholds  + 1)]
     
     Area.pres <- sum(rects.pres)
     Area.rand <- sum(rects.rand)

@@ -12,6 +12,8 @@ partialROC(
   iterations = 39,
   buf = NULL,
   log.transform = TRUE,
+  n.thresholds = 100,
+  thres.criteria = "regular",
   omission = 0,
   save.plot = TRUE,
   plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)
@@ -31,6 +33,10 @@ partialROC(
 \item{buf}{Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)}
 
 \item{log.transform}{A logical value to indicate whether to log-transform the raster values}
+
+\item{n.thresholds}{Numeric, an integer indicating the number of model prediction threholds}
+
+\item{thres.criteria}{Character string with values "regular" or "quantiles" to indicate how model predictions will be thresholded}
 
 \item{omission}{Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).}
 
@@ -69,7 +75,19 @@ valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo")
 proc <- partialROC(raster = pred,
                    points = valid.points,
                    r.points = 5000,
-                   plot.pars = list(name = "PartialROC.pdf", 
+                   n.thresholds = 100,
+                   thres.criteria = "regular",
+                   plot.pars = list(name = "PartialROC-regular.pdf", 
+                                    width = 5, 
+                                    height = 5),
+                   save.plot = FALSE)
+
+proc1 <- partialROC(raster = pred,
+                   points = valid.points,
+                   r.points = 5000,
+                   n.thresholds = 100,
+                   thres.criteria = "quantiles",
+                   plot.pars = list(name = "PartialROC-quantiles.pdf", 
                                     width = 5, 
                                     height = 5),
                    save.plot = FALSE)
