@@ -8,8 +8,10 @@ partialROC(
   raster,
   points,
   p.points = 0.5,
+  r.points = 1000,
   iterations = 39,
   buf = NULL,
+  log.transform = TRUE,
   omission = 0,
   save.plot = TRUE,
   plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)
@@ -22,9 +24,13 @@ partialROC(
 
 \item{p.points}{Numeric, double representing the proportion of validation points used in each iteration}
 
+\item{r.points}{Numeric, an integer representing the number of random points to be drawn from the raster predictions to calculate predicted areas}
+
 \item{iterations}{Numeric, integer the number of times the random sampling is repeated}
 
 \item{buf}{Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)}
+
+\item{log.transform}{A logical value to indicate whether to log-transform the raster values}
 
 \item{omission}{Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).}
 
@@ -62,6 +68,7 @@ valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo")
 
 proc <- partialROC(raster = pred,
                    points = valid.points,
+                   r.points = 5000,
                    plot.pars = list(name = "PartialROC.pdf", 
                                     width = 5, 
                                     height = 5),

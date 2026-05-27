@@ -3,8 +3,10 @@
 #' @param raster A raster layer object in format terra:SpatRaster representing the predicitions of a statistical model
 #' @param points A two-column data frame where the first two columns have to be the x and y coordinates respectively
 #' @param p.points Numeric, double representing the proportion of validation points used in each iteration
+#' @param r.points Numeric, an integer representing the number of random points to be drawn from the raster predictions to calculate predicted areas
 #' @param iterations Numeric, integer the number of times the random sampling is repeated
 #' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)
+#' @param log.transform A logical value to indicate whether to log-transform the raster values
 #' @param omission Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).
 #' @param save.plot Logical, to indicate whether to sace a pdf file of the simulated PartialROC analysis
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
@@ -33,6 +35,7 @@
 #' 
 #' proc <- partialROC(raster = pred,
 #'                    points = valid.points,
+#'                    r.points = 5000,
 #'                    plot.pars = list(name = "PartialROC.pdf", 
 #'                                     width = 5, 
 #'                                     height = 5),
@@ -42,12 +45,16 @@
 
 partialROC <- function(raster, 
                        points, 
-                       p.points = 0.5, 
+                       p.points = 0.5,
+                       r.points = 1000,
                        iterations = 39,
                        buf = NULL, 
+                       log.transform = TRUE,
                        omission = 0, 
                        save.plot = TRUE, 
                        plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5)){
+  
+  `%do%` <- foreach::`%do%`
   
   if(!is.null(buf)){
     p <- terra::vect(as.matrix(points[, -3]))
@@ -57,8 +64,6 @@ partialROC <- function(raster,
     
     raster <- terra::mask(raster, bur)
   }
-  
-  raster <- log(raster + 0.1)
   
   if(omission > 0){
     vals <- terra::extract(raster, points[, 1:2])[,2]
@@ -70,17 +75,39 @@ partialROC <- function(raster,
     points <- points[vals < q, ]
   }
   
+  if(log.transform){
+    raster <- log(raster + 0.01)
+  }
+  
   r <- ZeroOneNorm(raster)
   r <- round(r, 2)
   
   thres <- seq(0, 1, len = 101)
   
   #Thresholding suitability layer
-  r.thr <- r >= thres
-  area.pred <- terra::global(r.thr, mean, na.rm = TRUE)$mean
-  dArea <- area.pred[1:100] - area.pred[2:101]
   
-  points.r <- as.data.frame(r.thr, xy = TRUE)[, c("x", "y")]
+  r.xy <- r |> as.data.frame(xy = TRUE)
+  
+  samp <- base::sample(x = 1:nrow(r.xy),
+                       size = r.points,
+                       replace = FALSE,
+                       prob = NULL) |> sort()
+  
+  sample.points <- r.xy[samp, 3]
+  
+  pred.thrs <- foreach::foreach(i = seq_along(thres), .combine = cbind) %do% {
+    sample.points >= thres[i]
+  }  #Verificar que r.thr sea 
+  
+  pres.values <- terra::extract(r, points, ID = FALSE)[, 1]
+  
+  pres.thrs <- foreach::foreach(i = seq_along(thres), .combine = cbind) %do% {
+    pres.values >= thres[i]
+  } 
+  
+  area.pred <- colMeans(pred.thrs)
+  
+  dArea <- area.pred[1:100] - area.pred[2:101]
   
   mp <- matrix(0, nrow = iterations, ncol = length(area.pred))
   mr <- matrix(0, nrow = iterations, ncol = length(area.pred))
@@ -92,11 +119,11 @@ partialROC <- function(raster,
                        "PartialROC")
   
   for(i in 1:iterations){
-    samp.pres <- sample(1:nrow(points), size = nrow(points) * p.points, replace = FALSE)
-    samp.rand <- sample(1:nrow(points.r), size = nrow(points) * p.points, replace = FALSE)
+    samp.pres <- sample(1:nrow(pres.thrs), size = nrow(points) * p.points, replace = FALSE) |> sort()
+    samp.rand <- sample(1:nrow(pred.thrs), size = nrow(points) * p.points, replace = FALSE) |> sort()
     
-    pres.thr <- terra::extract(r.thr, points[samp.pres, 1:2])[, -1]
-    rand.thr <- terra::extract(r.thr, points.r[samp.rand, ])[, -1]
+    pres.thr <- pres.thrs[samp.pres, ]
+    rand.thr <- pred.thrs[samp.rand, ]
     
     
     #Calculating proportion of predicted points  
@@ -126,7 +153,7 @@ partialROC <- function(raster,
   P <- with(areas, length(which(PartialROC < 1))/iterations)
   
   if(save.plot){
-  grDevices::pdf(paste0(plot.pars$name), width = plot.pars$width, height = plot.pars$height)
+    grDevices::pdf(paste0(plot.pars$name), width = plot.pars$width, height = plot.pars$height)
     plot(area.pred, colMeans(mp), xlab = "% Area predicted", 
          ylab = "1 - Omission error", col = "grey95", type = "l", 
          xlim = c(0, 1), ylim = c(0, 1), main = paste0("AUC ratio = ", rat, "\n P = ", P))
@@ -137,9 +164,9 @@ partialROC <- function(raster,
     }
     graphics::lines(area.pred, colMeans(mp, na.rm = TRUE), col = "red", lwd = 1.5, type = "s")
     graphics::lines(area.pred, colMeans(mr, na.rm = TRUE), type = "s")
-  grDevices::dev.off()
-}
-
+    grDevices::dev.off()
+  }
+  
   
   areas <- as.data.frame(areas)
   
