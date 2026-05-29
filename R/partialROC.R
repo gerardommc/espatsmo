@@ -12,7 +12,7 @@
 #' @param omission Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).
 #' @param save.plot Logical, to indicate whether to sace a pdf file of the simulated PartialROC analysis
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
-#' @return A data.frame containing the simulated area ratios, and saves the plot of the areas and its median.
+#' @return A list containing a data.frame with the simulated area ratios, the mean average ratio and the P-value (probability that area-ratios < 1).
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
@@ -194,8 +194,9 @@ partialROC <- function(raster,
     grDevices::dev.off()
   }
   
-  
-  areas <- as.data.frame(areas)
-  
-  return(areas)
+  ret.list <- list(simulations = areas,
+                   Ratio = rat,
+                   P = P)
+
+  return(ret.list)
 }
