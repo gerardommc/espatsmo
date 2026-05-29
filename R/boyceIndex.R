@@ -1,16 +1,18 @@
 #' @title Calculate the Boyce index
-#' @description Measure predictive performance of a raster layer of evaluation points using the Boyce index
-#' @param raster A raster layer object in format terra:SpatRaster representing the predicitions of a statistical model
-#' @param points A two-column data frame where the first two columns have to be the x and y coordinates respectively
-#' @param r.points Numeric, an integer representing the number of random points to be drawn from the raster predictions to calculate predicted areas
-#' @param n.thresholds Numeric, an integer indicating the number of model prediction threholds
-#' @param thres.criteria Character string with values "regular" or "quantiles" to indicate how model predictions will be thresholded
-#' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0)
-#' @param log.transform A logical value to indicate whether to log-transform the raster values
+#' @description Measure predictive performance of a raster layer of evaluation points using the Boyce index.
+#' @param raster A raster layer object in format terra:SpatRaster representing the predicitions of a statistical model.
+#' @param points A two-column data frame where the first two columns have to be the x and y coordinates respectively.
+#' @param r.points Numeric, an integer representing the number of random points to be drawn from the raster predictions to calculate predicted areas.
+#' @param n.thresholds Numeric, an integer indicating the number of model prediction threholds.
+#' @param thres.criteria Character string with values "regular" or "quantiles" to indicate how model predictions will be thresholded.
+#' @param buf Numeric, the radius around testing presence points which will eliminate all areas further away (redundant if omission > 0).
+#' @param log.transform A logical value to indicate whether to log-transform the raster values.
 #' @param omission Numeric, double, representing the quantile of suitability values which will be used to exclude presence training points (my personal interpretation of Peterson et al. 2008).
 #' @param save.plot Logical, to indicate whether to sace a pdf file of the simulated PartialROC analysis
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
-#' @return A list containing a data.frame with the estimated and observed frequencies and averae suitability
+#' @param set.seed A logical value to specify whther to use a random seed generator
+#' @param seed An integer value to use as a seed.
+#' @return A list containing a data.frame with the estimated and observed frequencies and averae suitability.
 #' values per class, along with the estimated Boyce index ad P-value (estimated from the correlation test).
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
@@ -65,7 +67,13 @@ boyceIndex <- function(raster = NULL,
                   log.transform = FALSE,
                   omission = 0.05,
                   save.plot = TRUE, 
-                  plot.pars = list(name = "BoyceIndex.pdf", width = 5, height = 5)){
+                  plot.pars = list(name = "BoyceIndex.pdf", width = 5, height = 5),
+                  set.seed = FALSE,
+                  seed = 432){
+  
+  if(set.seed){
+    set.seed(seed)
+  }
   
   if(!is.null(buf)){
     p <- terra::vect(as.matrix(points[, -3]))
@@ -97,7 +105,7 @@ boyceIndex <- function(raster = NULL,
   
   #Thresholding suitability layer
   
-  r.xy <- r |> as.data.frame(xy = TRUE)
+  r.xy <- r |> terra::as.data.frame(xy = TRUE)
   
   if(thres.criteria == "regular"){
     thres <- seq(0, 1, len = n.thresholds + 1)
@@ -116,15 +124,15 @@ boyceIndex <- function(raster = NULL,
     rt1 <- c(rt1, (r >= thres[i]) * (r <= thres[i+1]))
   }
   
-  rt.rec <- classify(rt1, matrix(c(0, NA)))
+  rt.rec <- terra::classify(rt1, matrix(c(0, NA)))
   
   r.bins <- r * rt.rec
   
-  r.means <- global(r.bins, mean, na.rm = TRUE)
+  r.means <- terra::global(r.bins, mean, na.rm = TRUE)
   
-  r.areas <- global(rt1, mean, na.rm = TRUE)
+  r.areas <- terra::global(rt1, mean, na.rm = TRUE)
   
-  samp <- base::sample(x = 1:nrow(r.xy),
+  samp <- sample(x = 1:nrow(r.xy),
                        size = r.points,
                        replace = FALSE,
                        prob = NULL) |> sort()
@@ -137,9 +145,9 @@ boyceIndex <- function(raster = NULL,
   
   F.i <- P.i/E.i
   
-  Bo.data <- data.frame(F.i = F.i, P.i = P.i, E.i = E.i, Suit.Class.Mean = r.means$mean) |> na.omit()#Xtraer valores promedio de cada región
+  Bo.data <- data.frame(F.i = F.i, P.i = P.i, E.i = E.i, Suit.Class.Mean = r.means$mean) |> stats::na.omit()#Xtraer valores promedio de cada región
   
-  cr <- cor.test(x = Bo.data$F.i, 
+  cr <- stats::cor.test(x = Bo.data$F.i, 
                  y = Bo.data$Suit.Class.Mean, 
                  method = "spearman")
   
@@ -148,15 +156,15 @@ boyceIndex <- function(raster = NULL,
   P.value <- cr$p.value
   
   if(save.plot){
-    pdf(plot.pars$name, width = plot.pars$width, height = plot.pars$height)
-    plot(F.i ~ Suit.Class.Mean, 
-         data = Bo.data, 
-         col = "red",
-         pch = 20,
-         xlab = "Suitability Class",
-         ylab = "Predicted/Expected",
-         main = paste0("Boyce index = ", round(Boyce, 2), ", P = ", round(P.value, 2)))
-    dev.off()
+    grDevices::pdf(plot.pars$name, width = plot.pars$width, height = plot.pars$height)
+    graphics::plot(F.i ~ Suit.Class.Mean, 
+                   data = Bo.data, 
+                   col = "red",
+                   pch = 20,
+                   xlab = "Suitability Class",
+                   ylab = "Predicted/Expected",
+                   main = paste0("Boyce index = ", round(Boyce, 2), ", P = ", round(P.value, 2)))
+    grDevices::dev.off()
   }
   
   ret.list <- list(Frequencies = Bo.data,

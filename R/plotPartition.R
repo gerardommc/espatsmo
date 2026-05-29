@@ -25,22 +25,22 @@ plot.spatPart <- function(x, partition = 1){
   if(length(partition) == 1){
       if(partition == 0){
         terra::plot(x$part0$covariates[[1]], main = "Partition 0")
-        points(x$part0$points, col = "red", pch = 20)
+        graphics::points(x$part0$points, col = "red", pch = 20)
       }
       
       if(partition == 1){
         terra::plot(x$part1$covariates[[1]], main = "Partition 1")
-        points(x$part1$points, col = "red", pch = 20)
+        graphics::points(x$part1$points, col = "red", pch = 20)
       }
   }
   
   if(length(partition) > 1){
-    par(mfrow = c(1,2))
+    graphics::par(mfrow = c(1,2))
     
     terra::plot(x$part0$covariates[[1]], main = "Partition 0")
-    points(x$part0$points, col = "red", pch = 20)
+    graphics::points(x$part0$points, col = "red", pch = 20)
     
     terra::plot(x$part1$covariates[[1]], main = "Partition 1")
-    points(x$part1$points, col = "red", pch = 20)
+    graphics::points(x$part1$points, col = "red", pch = 20)
   }
 }

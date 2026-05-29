@@ -104,7 +104,7 @@ spatialPartition <- function(covariates = NULL,
                       xmax = xmax,
                       ymin = ymin,
                       ymax = ymax,
-                      crs = crs(r))
+                      crs = terra::crs(r))
     
     ri <- terra::init(b, "row")
     ci <- terra::init(b, "col")
