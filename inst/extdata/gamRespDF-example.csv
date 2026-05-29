@@ -1,0 +1,2 @@
+Variable,Smoother,Interaction,k,bs,m,d,by,fx,np,xt,id,sp,mc,pc
+bio1,s,bio2,NA,“cr”,NA,NA,NA,FALSE,TRUE,NULL,NULL,NULL,NULL,NULL

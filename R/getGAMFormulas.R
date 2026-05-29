@@ -23,18 +23,44 @@ getGAMFormulas <- function(respDF, compatMat){
 
   `%do%` <- foreach::`%do%`
   
-  formulas <-  foreach::foreach(i = 1:nrow(compatMat), .combine = c) %do% {
+  formulas <- foreach::foreach(i = 1:nrow(compatMat), .combine = c) %do% {
     v <- compatMat[i, ]
     rd <- respDF[which(respDF$Variable %in% v), ]
-    
     smoothType <- rd$Smoother
     
-    responseTypes <- foreach::foreach(k = seq_along(smoothType), .combine = c) %do% {
-      ifelse(smoothType[k] == 1, v[k], paste0(smoothType[k],"(", v[k], ")"))
-    }
+    conf <- list(k = rd$k, bs = rd$bs, m = rd$m,
+                 d = rd$d, by = rd$by, fx = rd$fx,
+                 np = rd$np, xt = rd$xt,id = rd$id,
+                 sp = rd$sp, mc = rd$mc,pc = rd$pd)
     
-    f1 <- paste0("~ ", paste("", responseTypes, collapse =  " + "))
-
+    if(is.null(conf$k)){ conf$k <- "NA" }  
+    if(is.null(conf$bs)){ conf$bs <- "cr" }
+    if(is.null(conf$m)){ conf$m <- "NA" } 
+    if(is.null(conf$d)){ conf$d <- "NA" }  
+    if(is.null(conf$by)){ conf$by <- "NA" }
+    if(is.null(conf$fx)){ conf$fx <- "FALSE" }
+    if(is.null(conf$np)){ conf$np <- "TRUE" }
+    if(is.null(conf$xt)){ conf$xt <- "NULL" }
+    if(is.null(conf$id)){ conf$id <- "NULL" }
+    if(is.null(conf$sp)){ conf$sp <- "NULL" }
+    if(is.null(conf$mc)){ conf$mc <- "NULL" }
+    if(is.null(conf$pc)){ conf$pc <- "NULL" }
+    
+    responseTypes <- foreach::foreach(ii = seq_along(smoothType), 
+                                      .combine = c) %do% {
+                                        
+                                        conf.ii <- paste0(",k = ", conf$k, ", bs = ", conf$bs, ", m = ", conf$m,
+                                                          ", d = ", conf$d, ", by = ", conf$by, ", fx = ", conf$fx,
+                                                          ", np = ", conf$np, ", xt = ", conf$xt, ", id = ", conf$id,
+                                                          ", sp = ", conf$sp, ", mc = ", conf$mc, ", pc = ", conf$pc)
+                                        
+                                        f.ii <- ifelse(smoothType[ii] == 1, v[ii], 
+                                                       paste0(smoothType[ii], "(", v[ii], conf.ii, ")"))
+                                        
+                                        return(f.ii)
+                                      }
+    
+    f1 <- paste0("~ ", paste("", responseTypes, collapse = " + "))
     return(f1)
   }
 
