@@ -6,7 +6,9 @@
 #' @param bias.data  A two-column data frame, containing the coordinates of the sampling localities, 
 #' SpatRaster or imList object containing the spatial variability of the observation effort
 #' @param bias.correction character, with values 'weights' or 'background', 
-#' specifying the method used to control the effect of sampling bias
+#' specifying the method used to control the effect of sampling bias.
+#' @param goodness.fit A character string specifying one of three methods to quickly measure goodness of fit, 
+#' "AIC" (from `spatstat.model`), "BIC" (from `stats`) or "logLik" (from `stats`).
 #' @param weight.bias.conf list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge and 7) p.keep. 
 #' Where `p.keep` is relevant bias.correction if bias.correction = 'background' and specifies the proportion of
 #' pixels to be retained after thinning the covariates. For the remaining elements of the list, please consult the help files of `spatstat.explore::density.ppm`.

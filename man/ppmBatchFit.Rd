@@ -10,6 +10,7 @@ ppmBatchFit(
   formulas = NULL,
   bias.data = NULL,
   bias.correction = NULL,
+  goodness.fit = "AIC",
   weight.bias.conf = list(positive = TRUE, kernel = "gaussian", sigma = NULL, varcov =
     NULL, weights = NULL, edge = TRUE, p.keep = 0.5, zo.norm = FALSE),
   parallel = TRUE,
@@ -30,7 +31,10 @@ ppmBatchFit(
 SpatRaster or imList object containing the spatial variability of the observation effort}
 
 \item{bias.correction}{character, with values 'weights' or 'background', 
-specifying the method used to control the effect of sampling bias}
+specifying the method used to control the effect of sampling bias.}
+
+\item{goodness.fit}{A character string specifying one of three methods to quickly measure goodness of fit, 
+"AIC" (from `spatstat.model`), "BIC" (from `stats`) or "logLik" (from `stats`).}
 
 \item{weight.bias.conf}{list, containing the following elements: 1) positive, 2) kernel, 3) sigma, 4) varcov, 5) weights, 6) edge and 7) p.keep. 
 Where `p.keep` is relevant bias.correction if bias.correction = 'background' and specifies the proportion of

@@ -73,7 +73,7 @@ pred <- spatstat.model::predict.ppm(model, covariates = r.im, locations = r.im[[
 
 valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo") |> read.csv()
 
-proc <- boyceIndex(raster = pred,
+bi.re <- boyceIndex(raster = pred,
                    points = valid.points,
                    r.points = 5000,
                    n.thresholds = 25,
@@ -83,7 +83,7 @@ proc <- boyceIndex(raster = pred,
                                     height = 5),
                    save.plot = FALSE)
 
-proc1 <- boyceIndex(raster = pred,
+bi.qu <- boyceIndex(raster = pred,
                    points = valid.points,
                    r.points = 5000,
                    n.thresholds = 25,
