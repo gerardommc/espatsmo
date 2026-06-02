@@ -49,6 +49,7 @@ ppmBatchFit <- function(points= NULL,
                         formulas = NULL, 
                         bias.data = NULL, #Data frame with sampling localities or raster layer
                         bias.correction = NULL,
+                        goodness.fit = "AIC",
                         weight.bias.conf = list(positive = TRUE, kernel = "gaussian",
                                                 sigma = NULL, varcov = NULL, 
                                                 weights = NULL, edge = TRUE,
@@ -260,12 +261,30 @@ ppmBatchFit <- function(points= NULL,
       return(m)
     }
   }
+
+  if(goodness.fit == "AIC"){
+    perf <- sapply(models, spatstat.model::AIC.ppm) 
+    perf.sort <- perf |> sort(decreasing = FALSE)
+    top <- perf.sort[1:top.models]
+
+    ids <- which(perf %in% top) |> rev()
+  }
   
-  perf <- sapply(models, spatstat.model::AIC.ppm) 
-  perf.sort <- perf |> sort(decreasing = FALSE)
-  top <- perf.sort[1:top.models]
-  
-  ids <- which(perf %in% top) |> rev()
+  if(goodness.fit == "BIC"){
+    perf <- sapply(models, stats::BIC)
+    perf.sort <- perf |> sort(decreasing = FALSE)
+    top <- perf.sort[1:top.models]
+
+    ids <- which(perf %in% top) |> rev()
+  }
+
+  if(goodness.fit == "logLik"){
+    perf <- sapply(models, stats::logLik)
+    perf.sort <- perf |> sort(decreasing = TRUE)
+    top <- perf.sort[1:top.models]
+
+    ids <- which(perf %in% top) |> sort(decreasing = TRUE)
+  }
   
   gc(reset = TRUE)
   
@@ -275,7 +294,8 @@ ppmBatchFit <- function(points= NULL,
                 covariates = covariates,
                 bias.correction = bias.correction,
                 bias.data = bias.data,
-                top.models = top.models))
+                top.models = top.models,
+                goodness.fit = goodness.fit))
   
   class(ret.list) <- "ppmBatch"
   

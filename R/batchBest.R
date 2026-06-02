@@ -42,7 +42,20 @@ batchBest <- function(batch = NULL, as.ppmSingle = TRUE){
     stop("Please provide a batch of models fitted with ppmBatchFit")
   }
   
-  m <- batch$models[[1]]
+  if(batch$call$goodness.fit == "AIC"){
+    perf <- sapply(batch$models, spatstat.model::AIC.ppm)
+    m <- batch$models[[which.min(perf)]]
+  }
+
+  if(batch$call$goodness.fit == "BIC"){
+    perf <- sapply(batch$models, stats::BIC)
+    m <- batch$models[[which.min(perf)]]
+  }
+
+  if(batch$call$goodness.fit == "logLik"){
+    perf <- sapply(batch$models, stats::logLik)
+    m <- batch$models[[which.max(perf)]]
+  }
   
   if(as.ppmSingle){
     ret.list <- list(model = m,
@@ -54,7 +67,6 @@ batchBest <- function(batch = NULL, as.ppmSingle = TRUE){
     class(ret.list) <- "ppmSingle"
     
     return(ret.list)} else {
-      
       return(m)
     }
 }
