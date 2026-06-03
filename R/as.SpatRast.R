@@ -23,7 +23,8 @@ as.SpatRast <- function(x = NULL,
   if(inherits(x, "imList")){
     r <- terra::rast(x[[1]])
     for(i in 2:length(x)){
-      r <- c(r, x[[i]])
+      r1 <- terra::rast(x[[i]])
+      r <- c(r, r1)
     }
     
     terra::crs(r) <- target.crs

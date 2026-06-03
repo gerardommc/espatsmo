@@ -80,6 +80,10 @@ partialROC <- function(raster,
   if(set.seed){
     set.seed(seed)
   }
+
+  if(!thres.criteria %in% c("regular", "quantiles")){
+    stop("Please specify a valid value for thres.criteria, either \"regular\", or \"quantiles\" ")
+  }
   
   if(!is.null(buf)){
     p <- terra::vect(as.matrix(points[, -3]))
