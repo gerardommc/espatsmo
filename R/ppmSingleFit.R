@@ -218,7 +218,8 @@ ppmSingleFit <- function(points= NULL,
         ret.list <- list(model = m,
                    call = list(bias.data = bias.data, #Data frame with sampling localities or raster layer
                                bias.correction = bias.correction,
-                               weight.bias.conf = weight.bias.conf))
+                               weight.bias.conf = weight.bias.conf,
+                               ppm.conf = ppm.conf))
         class(ret.list) <- "ppmSingle"
   
         return(ret.list)

@@ -297,7 +297,8 @@ ppmBatchFit <- function(points= NULL,
                 bias.correction = bias.correction,
                 bias.data = bias.data,
                 top.models = top.models,
-                goodness.fit = goodness.fit))
+                goodness.fit = goodness.fit,
+                ppm.conf = ppm.conf))
   
   class(ret.list) <- "ppmBatch"
   
