@@ -18,7 +18,8 @@ partialROC(
   save.plot = TRUE,
   plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5),
   set.seed = FALSE,
-  seed = 432
+  seed = 432,
+  remove.outer.points = TRUE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ partialROC(
 \item{set.seed}{A logical value to specify whther to use a random seed generator.}
 
 \item{seed}{An integer value to use as a seed.}
+
+\item{remove.outer.points}{Logical, used to indicate iff points ling outside the study window are going to be removed from model run.}
 }
 \value{
 A list containing a data.frame with the simulated area ratios, the mean average ratio and the P-value (probability that area-ratios < 1).

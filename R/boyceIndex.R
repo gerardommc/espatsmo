@@ -12,6 +12,7 @@
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
 #' @param set.seed A logical value to specify whther to use a random seed generator
 #' @param seed An integer value to use as a seed.
+#' @param remove.outer.points Logical, used to indicate iff points ling outside the study window are going to be removed from model run.
 #' @return A list containing a data.frame with the estimated and observed frequencies and averae suitability.
 #' values per class, along with the estimated Boyce index ad P-value (estimated from the correlation test).
 #' @examples
@@ -69,7 +70,8 @@ boyceIndex <- function(raster = NULL,
                   save.plot = TRUE, 
                   plot.pars = list(name = "BoyceIndex.pdf", width = 5, height = 5),
                   set.seed = FALSE,
-                  seed = 432){
+                  seed = 432,
+                  remove.outer.points = TRUE){
   
   if(set.seed){
     set.seed(seed)
@@ -77,6 +79,11 @@ boyceIndex <- function(raster = NULL,
 
   if(!thres.criteria %in% c("regular", "quantiles")){
     stop("Please specify a valid value for thres.criteria, either \"regular\", or \"quantiles\" ")
+  }
+
+  if(remove.outer.points){
+    nas <- terra::extract(raster, points[, 1:2], ID = FALSE)[, 1]
+    points <- points[!is.na(nas), ]
   }
   
   if(!is.null(buf)){

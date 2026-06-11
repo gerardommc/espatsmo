@@ -16,7 +16,8 @@ boyceIndex(
   save.plot = TRUE,
   plot.pars = list(name = "BoyceIndex.pdf", width = 5, height = 5),
   set.seed = FALSE,
-  seed = 432
+  seed = 432,
+  remove.outer.points = TRUE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ boyceIndex(
 \item{set.seed}{A logical value to specify whther to use a random seed generator}
 
 \item{seed}{An integer value to use as a seed.}
+
+\item{remove.outer.points}{Logical, used to indicate iff points ling outside the study window are going to be removed from model run.}
 }
 \value{
 A list containing a data.frame with the estimated and observed frequencies and averae suitability.

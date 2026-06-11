@@ -14,6 +14,7 @@
 #' @param plot.pars A list with entries 1) name (Character string), 2) width (plot width in inches) and 3) height (plot height in inches), to save the test plot.
 #' @param set.seed A logical value to specify whther to use a random seed generator.
 #' @param seed An integer value to use as a seed.
+#' @param remove.outer.points Logical, used to indicate iff points ling outside the study window are going to be removed from model run.
 #' @return A list containing a data.frame with the simulated area ratios, the mean average ratio and the P-value (probability that area-ratios < 1).
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
@@ -72,7 +73,8 @@ partialROC <- function(raster,
                        save.plot = TRUE, 
                        plot.pars = list(name = "PartialROC.pdf", width = 5, height = 5),
                        set.seed = FALSE,
-                       seed = 432
+                       seed = 432,
+                       remove.outer.points = TRUE
                       ){
   
   `%do%` <- foreach::`%do%`
@@ -83,6 +85,11 @@ partialROC <- function(raster,
 
   if(!thres.criteria %in% c("regular", "quantiles")){
     stop("Please specify a valid value for thres.criteria, either \"regular\", or \"quantiles\" ")
+  }
+
+  if(remove.outer.points){
+    nas <- terra::extract(raster, points[, 1:2], ID = FALSE)[, 1]
+    points <- points[!is.na(nas), ]
   }
   
   if(!is.null(buf)){
@@ -167,8 +174,8 @@ partialROC <- function(raster,
     
     
     #Calculating proportion of predicted points  
-    means.pres <- colMeans(pres.thr)
-    means.rand <- colMeans(rand.thr)
+    means.pres <- colMeans(pres.thr, na.rm = TRUE)
+    means.rand <- colMeans(rand.thr, na.rm = TRUE)
     
     #Calculating areas
     
