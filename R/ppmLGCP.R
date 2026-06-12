@@ -627,6 +627,7 @@ ppmLGCP <- function(points = NULL,
                    points = points,
                    quad.points = quad.xy,
                    covariates = covariates,
+                   bias.data = bias.data,
                    mesh = mesh,
                    call = list(formula = formula,
                                offset = offset,
@@ -639,6 +640,8 @@ ppmLGCP <- function(points = NULL,
                                coordinates = coordinates, #the alternative is m
                                dist.units = dist.units, #the alternative is "m" for m
                                weight.units = weight.units,
+                               dist.ar = dist.ar,
+                               verbose = verbose,
                                inla.mode = inla.mode))
   
   class(ret.data) <- c("ppmLGCP", covariance.func)
