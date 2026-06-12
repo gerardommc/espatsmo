@@ -152,7 +152,7 @@ partialROC <- function(raster,
     pres.values >= thres[i]
   } 
   
-  area.pred <- colMeans(pred.thrs)
+  area.pred <- colMeans(pred.thrs, na.rm = TRUE)
   
   dArea <- area.pred[1:n.thresholds] - area.pred[2:(n.thresholds + 1)]
   

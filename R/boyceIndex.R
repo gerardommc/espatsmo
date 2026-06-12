@@ -158,13 +158,19 @@ boyceIndex <- function(raster = NULL,
   
   Bo.data <- data.frame(F.i = F.i, P.i = P.i, E.i = E.i, Suit.Class.Mean = r.means$mean) |> stats::na.omit()#Xtraer valores promedio de cada región
   
-  cr <- stats::cor.test(x = Bo.data$F.i, 
-                 y = Bo.data$Suit.Class.Mean, 
-                 method = "spearman")
+  cr <- tryCatch(
+                stats::cor.test(x = Bo.data$F.i, 
+                                y = Bo.data$Suit.Class.Mean, 
+                                method = "spearman"),
+                error = function(x){paste0("I cannot calculate the Boyce Index with the given sample size")})
   
-  Boyce <- cr$estimate
-  
-  P.value <- cr$p.value
+  if(cr == "I cannot calculate the Boyce Index with the given sample size"){
+      Boyce <- cr
+      P.value <- NA
+  } else {
+      Boyce <- cr$estimate
+      P.value <- cr$p.value
+  }
   
   if(save.plot){
     grDevices::pdf(plot.pars$name, width = plot.pars$width, height = plot.pars$height)
