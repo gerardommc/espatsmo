@@ -132,6 +132,15 @@ ppmValidate.ppmLGCP <- function(model = NULL,
   retList <- list()
   
   if("proc" %in% method){
+
+    nproc1 <- proc.pars$plot.pars$name
+    nproc1 <-  base::substr(x = nproc1, 
+                            start = 1, 
+                            stop = nchar(nproc1) - 4)
+    
+    plot.pars.proc1 <- proc.pars$plot.pars
+    plot.pars.proc1$name <- nproc1
+
     proc1 <- partialROC(raster = pred0,
                         points = part$part1$points,
                         p.points = proc.pars$p.points,
@@ -143,9 +152,17 @@ ppmValidate.ppmLGCP <- function(model = NULL,
                         thres.criteria =  proc.pars$thres.criteria,
                         omission =  proc.pars$omission,
                         save.plot =  proc.pars$save.plot,
-                        plot.pars =  proc.pars$plot.pars,
+                        plot.pars =  plot.pars.proc1,
                         set.seed =  proc.pars$set.seed,
                         seed =  proc.pars$seed)
+    
+    nproc0 <- proc.pars$plot.pars$name
+    nproc0 <-  base::substr(x = nproc0, 
+                            start = 1, 
+                            stop = nchar(nproc0) - 4)
+    
+    plot.pars.proc0 <- proc.pars$plot.pars
+    plot.pars.proc0$name <- nproc0
     
     proc0 <- partialROC(raster = pred1,
                         points = part$part0$points,
@@ -158,7 +175,7 @@ ppmValidate.ppmLGCP <- function(model = NULL,
                         thres.criteria =  proc.pars$thres.criteria,
                         omission =  proc.pars$omission,
                         save.plot =  proc.pars$save.plot,
-                        plot.pars =  proc.pars$plot.pars,
+                        plot.pars =  plot.pars.proc0,
                         set.seed =  proc.pars$set.seed,
                         seed =  proc.pars$seed)
     
@@ -167,6 +184,15 @@ ppmValidate.ppmLGCP <- function(model = NULL,
   }
   
   if("boyce" %in% method){
+
+    nboy1 <- boyce.pars$plot.pars$name
+    nboy1 <- base::substr(x = nboy1, 
+                            start = 1, 
+                            stop = nchar(nboy1) - 4)
+    
+    plot.pars.boy1 <- boyce.pars$plot.pars
+    plot.pars.boy1$name <- nboy1
+
     boy1 <- boyceIndex(raster = pred0,
                        points = part$part1$points,  
                        r.points = boyce.pars$r.points,
@@ -176,9 +202,17 @@ ppmValidate.ppmLGCP <- function(model = NULL,
                        log.transform = boyce.pars$log.transform,
                        omission = boyce.pars$omission,
                        save.plot = boyce.pars$save.plot,
-                       plot.pars = boyce.pars$plot.pars,
+                       plot.pars = plot.pars.boy1,
                        set.seed = boyce.pars$set.seed,
                        seed = boyce.pars$seed)
+    
+    nboy0 <- boyce.pars$plot.pars$name
+    nboy0 <- base::substr(x = nboy0, 
+                            start = 1, 
+                            stop = nchar(nboy0) - 4)
+    
+    plot.pars.boy0 <- boyce.pars$plot.pars
+    plot.pars.boy0$name <- nboy1
     
     boy0 <-  boyceIndex(raster = pred1,
                         points = part$part0$points,  
@@ -189,7 +223,7 @@ ppmValidate.ppmLGCP <- function(model = NULL,
                         log.transform = boyce.pars$log.transform,
                         omission = boyce.pars$omission,
                         save.plot = boyce.pars$save.plot,
-                        plot.pars = boyce.pars$plot.pars,
+                        plot.pars = plot.pars.boy0,
                         set.seed = boyce.pars$set.seed,
                         seed = boyce.pars$seed)
     
