@@ -23,6 +23,9 @@
 \arguments{
 \item{model}{A model object of class ppmBatch}
 
+\item{method}{A character string specifying whther the method to use is the partial ROC ("proc"),
+the Boyce index ("boyce") or both.}
+
 \item{proc.pars}{A list containing the arguments passed to `partialROC`}
 
 \item{boyce.pars}{A list containing the arguments passed to `boyceIndex`}
@@ -42,6 +45,8 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
+resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
+
 compat <- findCompatibles(covariates = r,
                           thres = 0.6,
                           max.comb = 3)
@@ -55,7 +60,7 @@ models <- ppmBatchFit(points = p,
                       parallel = FALSE,
                       top.models = 3)
 
-val <- ppmValidate(model = model,
+val <- ppmValidate(model = models,
                    method = c("proc", "boyce"),
                    crs = "EPSG:6372")
 

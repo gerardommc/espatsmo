@@ -33,7 +33,9 @@
 #' 
 #' r.im <- imFromStack(r)
 #' 
-#' pred <- spatstat.model::predict.ppm(model, covariates = r.im, locations = r.im[[1]]) |> terra::rast()
+#' pred <- spatstat.model::predict.ppm(model, 
+#'                                     covariates = r.im, 
+#'                                     locations = r.im[[1]]) |> terra::rast()
 #' 
 #' valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo") |> read.csv()
 #' 
@@ -164,9 +166,12 @@ boyceIndex <- function(raster = NULL,
                                 method = "spearman"),
                 error = function(x){paste0("I cannot calculate the Boyce Index with the given sample size")})
   
-  if(cr == "I cannot calculate the Boyce Index with the given sample size"){
+  
+  if(inherits(cr, "character")){
       Boyce <- cr
       P.value <- NA
+      save.plot <- FALSE
+      warning("Skipping Boyce index plot")
   } else {
       Boyce <- cr$estimate
       P.value <- cr$p.value

@@ -2,6 +2,10 @@
 
 S3method(AIC,ppmBatch)
 S3method(AIC,ppmSingle)
+S3method(BIC,ppmBatch)
+S3method(BIC,ppmSingle)
+S3method(logLik,ppmBatch)
+S3method(logLik,ppmSingle)
 S3method(plot,spatPart)
 S3method(ppmValidate,ppm)
 S3method(ppmValidate,ppmBatch)

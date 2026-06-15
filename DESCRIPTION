@@ -26,6 +26,7 @@ Suggests:
       fmesher,
       INLA
 Imports:
+      stats,
       spatstat.geom,
       spatstat.model,
       spatstat.explore,

@@ -8,6 +8,8 @@ ppmValidate(model, ...)
 }
 \arguments{
 \item{model}{A model object of class ppm, ppmSingle or ppmBatch}
+
+\item{...}{arguments passed on to specific validation methods}
 }
 \value{
 A summary of the validation statistics generated

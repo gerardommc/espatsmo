@@ -2,6 +2,8 @@
 #' @description
 #' Quantify the predictive capacity of a point process model by data partitioning 
 #' @param model A model object of class ppmBatch
+#' @param method A character string specifying whther the method to use is the partial ROC ("proc"),
+#'  the Boyce index ("boyce") or both.
 #' @param proc.pars A list containing the arguments passed to `partialROC`
 #' @param boyce.pars A list containing the arguments passed to `boyceIndex`
 #' @param part.pars A list containing the arguments passed to `boyceIndex`
@@ -11,6 +13,8 @@
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
+#' 
+#' resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -25,7 +29,7 @@
 #'                       parallel = FALSE,
 #'                       top.models = 3)
 #' 
-#' val <- ppmValidate(model = model,
+#' val <- ppmValidate(model = models,
 #'                    method = c("proc", "boyce"),
 #'                    crs = "EPSG:6372")
 #' 

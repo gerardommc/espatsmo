@@ -2,6 +2,8 @@
 #' @description
 #' Quantify the predictive capacity of a point process model by data partitioning 
 #' @param model A model object of class ppmLGCP
+#' @param method A character string specifying whther the method to use is the partial ROC ("proc"),
+#'  the Boyce index ("boyce") or both.
 #' @param proc.pars A list containing the arguments passed to `partialROC`
 #' @param boyce.pars A list containing the arguments passed to `boyceIndex`
 #' @param part.pars A list containing the arguments passed to `boyceIndex`

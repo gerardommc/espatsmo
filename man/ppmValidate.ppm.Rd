@@ -25,6 +25,9 @@
 \arguments{
 \item{model}{A model object of class ppm, ppmSingle or ppmBatch}
 
+\item{method}{A character string specifying whther the method to use is the partial ROC ("proc"),
+the Boyce index ("boyce") or both.}
+
 \item{proc.pars}{A list containing the arguments passed to `partialROC`}
 
 \item{boyce.pars}{A list containing the arguments passed to `boyceIndex`}

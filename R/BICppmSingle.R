@@ -1,8 +1,8 @@
-#' @title Compute and print the AIC of single or batch point process models
+#' @title Compute and print the BIC of single or batch point process models
 #' @description
-#' Print the Akaike information criterion of a point process models fitted with spatstat's ppm, but via the inteface of the presente package.
+#' Print the Bayesian information criterion of a point process models fitted with spatstat's ppm, but via the inteface of the presente package.
 #' @param object A ppmSingle, fitted with the corresponding function
-#' @return The function returns the Akaike Information Criterion, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
+#' @return The function returns the Bayesian Information Criterion, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
 #' 
@@ -17,13 +17,13 @@
 #'                      bias.correction = "weights",
 #'                      as.ppmSingle = TRUE)
 #' 
-#' AIC(model)
+#' BIC(model)
 #' @export
-#' @method AIC ppmSingle
+#' @method BIC ppmSingle
 
 
-AIC.ppmSingle <- function(object){
-  spatstat.model::AIC.ppm(object$model)
+BIC.ppmSingle <- function(object){
+  stats::BIC(object$model)
 }
 
 
