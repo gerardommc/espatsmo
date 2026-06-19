@@ -33,7 +33,7 @@ getPolyFormulas <- function(respDF = NULL,
     stop("Cannot produce formulas, please provide a valid compatibility matrix")
   }
 
-  if(!any(names(respDF) %in% c("Variables", "Power"))){
+  if(!all(c("Variable", "Power") %in% names(respDF))){
     stop("Please verify that the names of respDF are exactly \"Variable\" and \"Power\", including capital letters.")
   }
 

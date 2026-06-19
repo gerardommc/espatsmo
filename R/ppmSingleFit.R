@@ -77,7 +77,7 @@ ppmSingleFit <- function(points= NULL,
                                positive = weight.bias.conf$positive, 
                                kernel = weight.bias.conf$kernel,
                                sigma = weight.bias.conf$sigma, 
-                               varcov = weight.bias.conf$sigma, 
+                               varcov = weight.bias.conf$varcov, 
                                weights = weight.bias.conf$weights, 
                                edge = weight.bias.conf$edge,
                                p.keep = weight.bias.conf$p.keep,
@@ -96,7 +96,7 @@ ppmSingleFit <- function(points= NULL,
         }
         
         if(inherits(points, "quad")){
-          pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+          pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$y, window = w)
           Q <- spatstat.geom::pixelquad(pp)
         }
       }
@@ -120,7 +120,7 @@ ppmSingleFit <- function(points= NULL,
           }
           
           if(inherits(points, "quad")){
-            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$y, window = w)
             Q <- spatstat.geom::pixelquad(pp)
           }
           
@@ -130,7 +130,7 @@ ppmSingleFit <- function(points= NULL,
                               positive = weight.bias.conf$positive,
                               kernel = weight.bias.conf$kernel,
                               sigma = weight.bias.conf$sigma,
-                              varcov = weight.bias.conf$sigma, 
+                              varcov = weight.bias.conf$varcov, 
                               weights = weight.bias.conf$weights, 
                               edge = weight.bias.conf$edge,
                               zo.norm = weight.bias.conf$zo.norm)
@@ -154,7 +154,7 @@ ppmSingleFit <- function(points= NULL,
           }
           
           if(inherits(points, "quad")){
-            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+            pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$y, window = w)
             Q <- spatstat.geom::pixelquad(pp)
           }
           
@@ -164,7 +164,7 @@ ppmSingleFit <- function(points= NULL,
                               positive = weight.bias.conf$positive,
                               kernel = weight.bias.conf$kernel,
                               sigma = weight.bias.conf$sigma,
-                              varcov = weight.bias.conf$sigma, 
+                              varcov = weight.bias.conf$varcov, 
                               weights = weight.bias.conf$weights, 
                               edge = weight.bias.conf$edge,
                               zo.norm = weight.bias.conf$zo.norm)
@@ -196,7 +196,7 @@ ppmSingleFit <- function(points= NULL,
       }
       
       if(inherits(points, "quad")){
-        pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$x, window = w)
+        pp <- spatstat.geom::ppp(x = points$data$x, y = points$data$y, window = w)
         Q <- Q <- spatstat.geom::pixelquad(pp)
       }
     }    

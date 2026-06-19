@@ -49,7 +49,7 @@ predict.ppmLGCP <- function(object = NULL,
           newdat.df <- newdat.df[-nas.ids, ]
         }
         
-        mod.mat <- stats::model.matrix(object = stats::as.formula(model$call$formula),
+        mod.mat <- stats::model.matrix(object = stats::as.formula(object$call$formula),
                                        data = newdat.df)
         
         means <- object$model$summary.fixed$mean

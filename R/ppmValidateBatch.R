@@ -79,7 +79,7 @@ ppmValidate.ppmBatch <- function(model = NULL,
                              stop = nchar(nproc0) - 4)
       
       proc.parsi <- proc.pars
-      proc.parsi$plot.pars$name <- list(name = paste0(nproc, "-", i, ".pdf"))
+      proc.parsi$plot.pars$name <- paste0(nproc, "-", i, ".pdf")
       }
       
       if("boyce" %in% method){
@@ -89,7 +89,7 @@ ppmValidate.ppmBatch <- function(model = NULL,
                               stop = nchar(nboy0) - 4)
         
         boyce.parsi <- boyce.pars
-        boyce.parsi$plot.pars$name <- list(name = paste0(nboy, "-", i, ".pdf"))
+        boyce.parsi$plot.pars$name <- paste0(nboy, "-", i, ".pdf")
       }
       
 

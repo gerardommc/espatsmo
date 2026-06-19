@@ -22,7 +22,7 @@ shuffle <- function(n = NULL,
                     seed = 432){
   
   if(set.seed){
-    set.seed(432)
+    set.seed(seed)
   }
   
   if(!is.numeric(n)){

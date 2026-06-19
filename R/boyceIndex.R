@@ -159,7 +159,8 @@ boyceIndex <- function(raster = NULL,
   F.i <- P.i/E.i
   
   Bo.data <- data.frame(F.i = F.i, P.i = P.i, E.i = E.i, Suit.Class.Mean = r.means$mean) |> stats::na.omit()#Xtraer valores promedio de cada región
-  
+  Bo.data <- Bo.data[is.finite(Bo.data$F.i), ]
+
   cr <- tryCatch(
                 stats::cor.test(x = Bo.data$F.i, 
                                 y = Bo.data$Suit.Class.Mean, 
