@@ -46,7 +46,7 @@ getGAMFormulas <- function(respDF, compatMat){
     if(is.null(conf$mc)){ conf$mc <- "NULL" }
     if(is.null(conf$pc)){ conf$pc <- "NULL" }
     
-    responseTypes <- foreach::foreach(ii = seq_along(smoothType), 
+    responseTypes <- foreach::foreach(ii = seq_along(rd$Variable), 
                                       .combine = c) %do% {
                                         
                                         conf.ii <- paste0(",k = ", conf$k, ", bs = ", conf$bs, ", m = ", conf$m,
@@ -54,8 +54,8 @@ getGAMFormulas <- function(respDF, compatMat){
                                                           ", np = ", conf$np, ", xt = ", conf$xt, ", id = ", conf$id,
                                                           ", sp = ", conf$sp, ", mc = ", conf$mc, ", pc = ", conf$pc)
                                         
-                                        f.ii <- ifelse(smoothType[ii] == 1, v[ii], 
-                                                       paste0(smoothType[ii], "(", v[ii], conf.ii, ")"))
+                                        f.ii <- ifelse(smoothType[ii] == 1, rd$Variable[ii], 
+                                                       paste0(smoothType[ii], "(", rd$Variable[ii], conf.ii, ")"))
                                         
                                         return(f.ii)
                                       }

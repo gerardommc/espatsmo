@@ -43,18 +43,16 @@ getPolyFormulas <- function(respDF = NULL,
     v <- compatMat[i, ]
     rd <- respDF[which(respDF$Variable %in% v), ]
     
-    exponents <- foreach::foreach(j = 1:nrow(rd)) %do% {
-      p <- 1:rd$Power[j]
+    exponents <- lapply(rd$Power, function(x){1:x})
+    
+    var.exponents <- foreach::foreach(k = seq_along(rd$Variable), .combine = c) %do% {
+      ifelse(exponents[[k]] == 1, rd$Variable[k], paste0("I(", rd$Variable[k], "^", exponents[[k]], ")"))
     }
     
-    var.exponents <- foreach::foreach(k = seq_along(exponents), .combine = c) %do% {
-      ifelse(exponents[[k]] == 1, v[k], paste0("I(", v[k], "^", exponents[[k]], ")"))
-    }
+    var.exponents[1] <- paste0("~ ", var.exponents[1])
+                  
+    f1 <- paste(var.exponents, collapse = " + ")
     
-    f1 <- paste0("~",var.exponents[1])
-    for(ii in 2:length(var.exponents)){
-      f1 <- paste(f1, var.exponents[ii], sep = " + ")
-    }
     return(f1)
   }
 
