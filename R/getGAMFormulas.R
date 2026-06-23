@@ -40,11 +40,6 @@ getGAMFormulas <- function(respDF, compatMat){
     if(is.null(conf$by)){ conf$by <- "NA" }
     if(is.null(conf$fx)){ conf$fx <- "FALSE" }
     if(is.null(conf$np)){ conf$np <- "TRUE" }
-    if(is.null(conf$xt)){ conf$xt <- "NULL" }
-    if(is.null(conf$id)){ conf$id <- "NULL" }
-    if(is.null(conf$sp)){ conf$sp <- "NULL" }
-    if(is.null(conf$mc)){ conf$mc <- "NULL" }
-    if(is.null(conf$pc)){ conf$pc <- "NULL" }
     
     responseTypes <- foreach::foreach(ii = seq_along(rd$Variable), 
                                       .combine = c) %do% {
