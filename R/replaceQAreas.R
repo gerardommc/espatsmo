@@ -70,7 +70,7 @@ replaceQAreas <- function(Q = NULL,
     
     SampleRatios <- d.obs/d.E
     
-    begin <- Q$w |> length() - length(SampleRatios[]) +1
+    begin <- (Q$w |> length())- (SampleRatios[] |> length() +1)
     end <- Q$w |> length()
     
     NewAreas <- Q$w[begin:end] * SampleRatios[]
@@ -98,7 +98,7 @@ replaceQAreas <- function(Q = NULL,
       
       n.pix <- terra::global(ones, "sum", na.rm = TRUE)
       
-      SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
+      SampleRatios <- imFromStack(bias.data/((ones/n.pix$sum)*Q$data$n))
     
       begin <- Q$w |> length() - length(SampleRatios[]) +1
       end <- Q$w |> length()
@@ -128,7 +128,7 @@ replaceQAreas <- function(Q = NULL,
       
       n.pix <- terra::global(ones, "sum", na.rm = TRUE)
       
-      SampleRatios <- imFromStack(bias.data/(ones/n.pix$sum))
+      SampleRatios <- imFromStack(bias.data/((ones/n.pix$sum)*Q$data$n))
 
       begin <- Q$w |> length() - length(SampleRatios[]) +1
       end <- Q$w |> length()
