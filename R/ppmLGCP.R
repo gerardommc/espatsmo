@@ -197,20 +197,35 @@ ppmLGCP <- function(points = NULL,
     #Bias correction based on are weights
     if(bias.correction == "weights"){
       if(inherits(bias.data, "data.frame")){
-        Qa <- replaceQAreas(Q = Q,
-                            bias.data = bias.data, 
-                            im = iml[[1]],
-                            positive = weight.bias.conf$positive,
-                            kernel = weight.bias.conf$kernel,
-                            sigma = weight.bias.conf$sigma,
-                            varcov = weight.bias.conf$varcov, 
-                            weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge,
-                            zo.norm = weight.bias.conf$zo.norm)
-        
-        area.weights <- iml[[1]]
-        area.weights[] <- Qa$w[beg:en]
-        weights.r <- area.weights |> terra::rast()
+          bias.ppp <- spatstat.geom::ppp(x = bias.data$x, 
+                                         y = bias.data$y, window = win)
+          
+          dens.r <- terra::rast(spatstat.geom::density.ppp(bias.ppp, 
+                                                           positive = weight.bias.conf$positive, kernel = weight.bias.conf$kernel, 
+                                                           sigma = weight.bias.conf$sigma, varcov = weight.bias.conf$varcov, 
+                                                           weights = weight.bias.conf$weights, edge = weight.bias.conf$edge))
+          
+          bias.df <- terra::as.data.frame(dens.r, xy = TRUE)
+          ux <- bias.df$x |> unique() |> sort()
+          uy <- bias.df$y |> unique() |> sort()
+          
+          dx <- ux[2] - ux[1]
+          dy <- uy[2] - uy[1]
+          
+          area <- dx * dy
+          
+          sum.bias <- terra::global(bias.data, sum, na.rm = TRUE)
+          
+          ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+          
+          sum.ones <- terra::global(ones, sum, na.rm = TRUE)
+          
+          bias.data <- bias.data / sum.bias$sum
+          p.area <- ones / sum.ones$sum
+          
+          Ratio <- bias.data / p.area
+
+          weights.r <- Ratio * area
         
         # Adjust here for the number of background points and total area size
         
@@ -255,20 +270,28 @@ ppmLGCP <- function(points = NULL,
         
         bias.data <- terra::resample(bias.data, covariates[[1]])
         
-        Qa <- replaceQAreas(Q = Q,
-                            bias.data = bias.data, 
-                            im = iml[[1]], 
-                            positive = weight.bias.conf$positive,
-                            kernel = weight.bias.conf$kernel,
-                            sigma = weight.bias.conf$sigma,
-                            varcov = weight.bias.conf$varcov, 
-                            weights = weight.bias.conf$weights, 
-                            edge = weight.bias.conf$edge,
-                            zo.norm = weight.bias.conf$zo.norm)
+        bias.df <- terra::as.data.frame(bias.data, xy = TRUE)
+        ux <- bias.df$x |> unique() |> sort()
+        uy <- bias.df$y |> unique() |> sort()
+          
+        dx <- ux[2] - ux[1]
+        dy <- uy[2] - uy[1]
+          
+        area <- dx * dy
+          
+        sum.bias <- terra::global(bias.data, sum, na.rm = TRUE)
+          
+        ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+          
+        sum.ones <- terra::global(ones, sum, na.rm = TRUE)
+          
+        bias.data <- bias.data / sum.bias$sum
         
-        area.weights <- iml[[1]]
-        area.weights[] <- Qa$w[beg:en]
-        weights.r <- area.weights |> terra::rast()
+        p.area <- ones / sum.ones$sum
+          
+        Ratio <- bias.data / p.area
+          
+        weights.r <- Ratio * area
         
         if(!is.null(no.bkgd)){
           s <- sample(1:nrow(cov.df), no.bkgd) |> sort()
