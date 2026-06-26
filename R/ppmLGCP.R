@@ -325,7 +325,11 @@ ppmLGCP <- function(points = NULL,
           
           quad.xy <- quad.xy[nas.quad, ]
           
-          wei <- terra::extract(weights.r, quad.xy)[, 2] * nrow(cov.df)/nrow(quad.xy)
+          wei <- terra::extract(weights.r, quad.xy, ID = FALSE)[, 1]
+          nas.wei <- !is.na(wei)
+          
+          quad.xy <- quad.xy[nas.wei, ]
+          wei <- wei[nas.wei] * nrow(cov.df)/nrow(quad.xy)
         }
       }
     }
