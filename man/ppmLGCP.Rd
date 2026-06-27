@@ -91,14 +91,31 @@ by modifying area weights or the distribution of background (quadrature) points.
 \examples{
 r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
+s <-  system.file("extdata", "ClusterRandomSamples.csv", package = "espatsmo") |>  read.csv()
+
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
-
-model <- ppmLGCP(points= p, 
+pr <- p[s$Samples, ]
+ 
+model <- ppmLGCP(points= pr, 
                  covariates = r, 
                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
                  dist.ar = FALSE,
                  weight.units = "km",
                  coordinates = "m")
+
+bias <- system.file("extdata", "TargetGroup.tif", package = "espatsmo") |>  terra::rast() |> scale()
+sb <- system.file("extdata", "ClusterBiasSamples.csv", package = "espatsmo") |>  read.csv()
+
+pb <- p[sb$Samples, ] 
+
+model.w <- ppmLGCP(points= pb, 
+                 covariates = r, 
+                 formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
+                 dist.ar = FALSE,
+                 bias.data = bias,
+                 bias.correction = "weights",
+                 weight.units = "km",
+                 coordinates = "m")
+
 }

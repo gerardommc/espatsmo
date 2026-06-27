@@ -6,11 +6,13 @@
 #' @examples
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
-#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
+#' s <-  system.file("extdata", "ClusterRandomSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
-#'
-#' model <- ppmLGCP(points= p, 
+#' p <- system.file("extdata", "pointsCluster.csv", package = "espatsmo") |>  read.csv()
+#' 
+#' pr <- p[s$Samples, ]
+#'  
+#' model <- ppmLGCP(points= pr, 
 #'                  covariates = r, 
 #'                  formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
 #'                  dist.ar = FALSE,
