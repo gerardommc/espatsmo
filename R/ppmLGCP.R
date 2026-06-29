@@ -52,7 +52,7 @@
 #'                  weight.units = "km",
 #'                  coordinates = "m")
 #'
-#' bias <- system.file("extdata", "TargetGroup.tif", package = "espatsmo") |>  terra::rast() |> scale()
+#' bias <- system.file("extdata", "TargetGroup.tif", package = "espatsmo") |>  terra::rast()
 #' sb <- system.file("extdata", "ClusterBiasSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' pb <- p[sb$Samples, ] 
