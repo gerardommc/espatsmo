@@ -41,7 +41,7 @@
 #' 
 #' s <-  system.file("extdata", "ClusterRandomSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
+#' p <- system.file("extdata", "pointsCluster.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' pr <- p[s$Samples, ]
 #'  
@@ -52,7 +52,8 @@
 #'                  weight.units = "km",
 #'                  coordinates = "m")
 #'
-#' bias <- system.file("extdata", "TargetGroup.tif", package = "espatsmo") |>  terra::rast()
+#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |>  terra::rast()
+#' 
 #' sb <- system.file("extdata", "ClusterBiasSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
 #' pb <- p[sb$Samples, ] 
