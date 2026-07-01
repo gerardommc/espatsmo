@@ -52,12 +52,38 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
+
+pr <- p[s$Samples, ]
+
+#Model with random sampling
+
+model <- ppmSingleFit(points = pr,
+                      covariates = r,
+                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
+                      as.ppmSingle = FALSE)
+
 bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 
-model <- ppmSingleFit(points= p, 
-                     covariates = r, 
-                     formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-                     bias.data = bias,
-                     bias.correction = "weights",
-                     as.ppmSingle = FALSE)
+sb <- system.file("extdata", "BiasSamples.csv", package = "espatsmo") |>  read.csv()
+
+pb <- p[sb$Samples, ]
+
+#Model with observation bias represented with a raster layer
+
+modelBiasRaster <- ppmSingleFit(points = pb,
+                                covariates = r,
+                                formula =  "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
+                                bias.data = bias,
+                                bias.correction = "weights")
+
+bias.df <- system.file("extdata", "Target-group-points.csv", package = "espatsmo") |>  read.csv()
+
+#' #Model with observation bias represented with a set of sampling points in a data.frame
+
+modelBiasDF <- ppmSingleFit(points = pb,
+                            covariates = r,
+                            formulas = forms,
+                            bias.data = bias.df,
+                            bias.correction = "weights")
 }

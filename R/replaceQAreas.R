@@ -48,7 +48,7 @@ replaceQAreas <- function(Q = NULL,
                           zo.norm = FALSE){
 
   
-  if(inherits(bias.data, "data.frame")){
+if(inherits(bias.data, "data.frame")){
     window <- Q$dummy$window
     
     if(inherits(im, "SpatRaster")){r <- im}
@@ -59,18 +59,40 @@ replaceQAreas <- function(Q = NULL,
     
     sample.ppp <- spatstat.geom::ppp(x = r.counts$x, y = r.counts$y, marks = r.counts$count, window = window)
     
-    df.weights <- terra::as.data.frame(r, xy = TRUE)
-    df.weights[, 3] <- sum(r.counts$count)/nrow(df.weights)
-    
-    d.E <- terra::rast(df.weights) |> imFromStack()
-    
     d.obs <- spatstat.explore::density.ppp(sample.ppp, positive = positive, kernel = kernel,
                                            sigma = sigma, varcov = varcov, 
                                            weights = marks, edge = edge)
     
-    SampleRatios <- d.obs/d.E
+    if(zo.norm){
+      bias.data <- d.obs
+      if(inherits(im, "SpatRaster")){
+        bias.data <- terra::rast(bias.data)
+        bias.data <- terra::resample(bias.data, im) |> ZeroOneNorm()
+      } else {
+        bias.data <- terra::rast(bias.data, im) |> ZeroOneNorm()
+      }
+    } else {
+      bias.data <- d.obs
+      if(inherits(im, "SpatRaster")){
+        bias.data <- terra::rast(bias.data)
+        bias.data <- terra::resample(bias.data, im)
+      } else {
+        bias.data <- terra::rast(bias.data, im)
+      }
+    }
     
-    begin <- (Q$w |> length())- (SampleRatios[] |> length() +1)
+    sum.bias <- terra::global(bias.data, "sum", na.rm = TRUE)
+    bias.data <- bias.data/sum.bias$sum 
+    
+    bias.data <- bias.data * Q$data$n
+    
+    ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+    
+    n.pix <- terra::global(ones, "sum", na.rm = TRUE)
+    
+    SampleRatios <- imFromStack(bias.data/((ones/n.pix$sum)*Q$data$n))
+    
+    begin <- Q$w |> length() - length(SampleRatios[]) +1
     end <- Q$w |> length()
     
     NewAreas <- Q$w[begin:end] * SampleRatios[]

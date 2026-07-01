@@ -8,11 +8,13 @@
 #' @param as.ppmSingle Logical, whether the returned object is a ppSingle, or spatstat.model::ppm to be handled with spatstat.
 #' @return A ppmSingle or ppm object.
 #' @examples
-#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#' s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
+#' 
+#' pr <- p[s$Samples, ]
 #'
 #' resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 #' 
@@ -23,11 +25,9 @@
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
 #' 
-#' models <- ppmBatchFit(points = p,
+#' models <- ppmBatchFit(points = pr,
 #'                       covariates = r,
 #'                       formulas = forms,
-#'                       bias.data = bias,
-#'                       bias.correction = "weights",
 #'                       parallel = FALSE,
 #'                       top.models = 3)
 #' 

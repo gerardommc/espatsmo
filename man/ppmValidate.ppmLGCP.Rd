@@ -45,7 +45,7 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 s <-  system.file("extdata", "ClusterRandomSamples.csv", package = "espatsmo") |>  read.csv()
 
-p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
+p <- system.file("extdata", "pointsCluster.csv", package = "espatsmo") |>  read.csv()
 
 pr <- p[s$Samples, ]
  

@@ -15,18 +15,20 @@ objects. For objects of class ppmSingle, if the argument as.ppmSingle = TRUE, ot
 summary will call spatstat.model::summary.ppm
 }
 \examples{
-r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |>  scale()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast("")
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
 
-model <- ppmSingleFit(points= p, 
-                     covariates = r, 
-                     formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-                     bias.data = bias, #Data frame with sampling localities or raster layer
-                     bias.correction = "weights",
-                     as.ppmSingle = FALSE)
+pr <- p[s$Samples, ]
+
+#Model with random sampling
+
+model <- ppmSingleFit(points = pr,
+                      covariates = r,
+                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
+                      as.ppmSingle = FALSE)
 
 summary(model)
 }

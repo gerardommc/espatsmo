@@ -19,28 +19,29 @@
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
+#' s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#' pr <- p[s$Samples, ] 
 #' 
 #' model <- ppmSingleFit(points= p, 
 #'                      covariates = r, 
-#'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-#'                      bias.data = bias, #Data frame with sampling localities or raster layer
-#'                      bias.correction = "weights",
+#'                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
 #'                      as.ppmSingle = FALSE)
 #' 
 #' spatstat.model::summary.ppm(model)
+#' 
+#' v <- system.file("extdata", "ValidationSamples.csv", package = "espatsmo") |> read.csv()
+#' 
+#' pv <- p[v$Samples, ]
 #' 
 #' r.im <- imFromStack(r)
 #' 
 #' pred <- spatstat.model::predict.ppm(model, 
 #'                                     covariates = r.im, 
-#'                                     locations = r.im[[1]]) |> terra::rast()
-#' 
-#' valid.points <- system.file("extdata", "Valid_points.csv", package = "espatsmo") |> read.csv()
+#'                                     locations = r.im[[1]]) |> terra::rast() 
 #' 
 #' bi.re <- boyceIndex(raster = pred,
-#'                    points = valid.points,
+#'                    points = pv,
 #'                    r.points = 5000,
 #'                    n.thresholds = 25,
 #'                    thres.criteria = "regular",
@@ -50,7 +51,7 @@
 #'                    save.plot = FALSE)
 #' 
 #' bi.qu <- boyceIndex(raster = pred,
-#'                    points = valid.points,
+#'                    points = pv,
 #'                    r.points = 5000,
 #'                    n.thresholds = 25,
 #'                    thres.criteria = "quantiles",

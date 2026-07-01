@@ -23,9 +23,13 @@
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
+#' s <-  system.file("extdata", "BiasSamples.csv", package = "espatsmo") |>  read.csv()
+#' 
+#' pr <- p[s$Samples, ]
+#' 
 #' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' masked <- maskBias(covariates = r, 
+#' masked <- maskBias(covariates = pr, 
 #'                    bias.data = bias, 
 #'                    points = p,
 #'                    p.keep = 0.5,

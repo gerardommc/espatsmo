@@ -20,7 +20,9 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
+
+pr <- p[s$Samples, ]
 
 resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 
@@ -31,11 +33,9 @@ compat <- findCompatibles(covariates = r,
 forms <- getPolyFormulas(respDF = resp, 
                          compatMat = compat)
 
-models <- ppmBatchFit(points = p,
+models <- ppmBatchFit(points = pr,
                       covariates = r,
                       formulas = forms,
-                      bias.data = bias,
-                      bias.correction = "weights",
                       parallel = FALSE,
                       top.models = 3)
 

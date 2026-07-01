@@ -16,18 +16,20 @@ The function returns the Bayesian Information Criterion, one for a ppmSigle obje
 Print the Bayesian information criterion of a point process models fitted with spatstat's ppm, but via the inteface of the presente package.
 }
 \examples{
-r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
 
-model <- ppmSingleFit(points= p, 
-                     covariates = r, 
-                     formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-                     bias.data = bias, #Data frame with sampling localities or raster layer
-                     bias.correction = "weights",
-                     as.ppmSingle = TRUE)
+pr <- p[s$Samples, ]
+
+#Model with random sampling
+
+model <- ppmSingleFit(points = pr,
+                      covariates = r,
+                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
+                      as.ppmSingle = FALSE)
 
 BIC(model)
 }

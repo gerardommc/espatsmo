@@ -22,9 +22,13 @@
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
+#' s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
+#' 
+#' pr <- p[s$Samples, ]
+#' 
 #' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' plotResponses(points = p,
+#' plotResponses(points = pr,
 #'               covariates = r,
 #'               bias.data = bias,
 #'               bias.correction = "weights",

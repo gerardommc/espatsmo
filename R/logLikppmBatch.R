@@ -4,13 +4,15 @@
 #' @param object A ppmBatch object produced by ppmBatchFit
 #' @return The function returns the log-Likelihood, one for a ppmSigle object, or the values of all the returned mdels with ppmBatchFit
 #' @examples
-#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast()
+#' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
 #' 
 #' p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+#' s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
 #' 
-#' resp <- system.file("extdata", "Exponents.csv", package = "espatsmo") |>  read.csv()
+#' pr <- p[s$Samples, ]
+#'
+#' resp <-  system.file("extdata", "Exponents.csv", package = "espatsmo") |> read.csv()
 #' 
 #' compat <- findCompatibles(covariates = r,
 #'                           thres = 0.6,
@@ -19,11 +21,9 @@
 #' forms <- getPolyFormulas(respDF = resp, 
 #'                          compatMat = compat)
 #' 
-#' models <- ppmBatchFit(points = p,
+#' models <- ppmBatchFit(points = pr,
 #'                       covariates = r,
 #'                       formulas = forms,
-#'                       bias.data = bias,
-#'                       bias.correction = "weights",
 #'                       parallel = FALSE,
 #'                       top.models = 3)
 #' 

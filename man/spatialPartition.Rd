@@ -40,8 +40,12 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
+
+pr <- p[s$Samples, ]
+
 part <- spatialPartition(covariates = r,
-                         points = p, 
+                         points = pr, 
                          no.blocks = 100,
                          part.criteria = "random",
                          mask.criteria = "random",

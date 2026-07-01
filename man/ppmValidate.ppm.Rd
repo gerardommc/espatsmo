@@ -49,13 +49,13 @@ r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::ra
 
 p <- system.file("extdata", "points.csv", package = "espatsmo") |>  read.csv()
 
-bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
+s <-  system.file("extdata", "RandomSamples.csv", package = "espatsmo") |>  read.csv()
 
-model <- ppmSingleFit(points= p, 
-                      covariates = r, 
-                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)", 
-                      bias.data = bias,
-                      bias.correction = "weights",
+pr <- p[s$Samples, ]
+
+model <- ppmSingleFit(points = pr,
+                      covariates = r,
+                      formula = "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
                       as.ppmSingle = FALSE)
 
 val <- ppmValidate(model = model,
