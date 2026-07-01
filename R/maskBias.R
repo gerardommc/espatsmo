@@ -29,9 +29,9 @@
 #' 
 #' bias <- system.file("extdata", "Target-group.tif", package = "espatsmo") |> terra::rast()
 #' 
-#' masked <- maskBias(covariates = pr, 
+#' masked <- maskBias(covariates = r, 
 #'                    bias.data = bias, 
-#'                    points = p,
+#'                    points = pr,
 #'                    p.keep = 0.5,
 #'                    as.imList = FALSE)
 #' @export

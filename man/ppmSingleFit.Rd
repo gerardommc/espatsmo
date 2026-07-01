@@ -83,7 +83,7 @@ bias.df <- system.file("extdata", "Target-group-points.csv", package = "espatsmo
 
 modelBiasDF <- ppmSingleFit(points = pb,
                             covariates = r,
-                            formulas = forms,
+                            formula =  "~ bio1 + bio2 + bio12 + I(bio1^2) + I(bio2^2) + I(bio12^2)",
                             bias.data = bias.df,
                             bias.correction = "weights")
 }
