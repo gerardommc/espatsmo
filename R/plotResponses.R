@@ -82,7 +82,12 @@ plotResponses <- function(points = NULL,
 
       if(inherits(covariates, "SpatRaster")){
         imList <- imFromStack(covariates)
-        w <- spatstat.geom::as.owin(imList[[1]])
+        if(terra::nlyr(covariates) == 1){
+                  w <- spatstat.geom::as.owin(imList)
+        }
+        if(terra::nlyr(covariates) > 1){
+                  w <- spatstat.geom::as.owin(imList[[1]])
+        }
       }
 
       if(inherits(points, "data.frame")){
