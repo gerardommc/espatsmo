@@ -70,7 +70,7 @@ predict.ppmLGCP <- function(object = NULL,
         
         pred.r <- data.frame(newdat.df[, c("x", "y")], preds) |> terra::rast() |> exp()
         names(pred.r) <- paste0(probs)
-        crs(pred.r) <- crs
+        terra::crs(pred.r) <- crs
         
         return(pred.r)
 }
