@@ -36,7 +36,7 @@
 #' predictions <- predict(object = models, newdata = r)
 #' 
 #' @export
-#' @method predict ppmSingle
+#' @method predict ppmBatch
 
 predict.ppmBatch <- function(object = NULL,
                               newdata = NULL,

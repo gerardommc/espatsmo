@@ -4,7 +4,7 @@
 \alias{predict.ppmBatch}
 \title{Generate predictions from ppmBatch object}
 \usage{
-\method{predict}{ppmSingle}(object = NULL, newdata = NULL, se = FALSE, level = 0.95, crs = NULL)
+\method{predict}{ppmBatch}(object = NULL, newdata = NULL, se = FALSE, level = 0.95, crs = NULL)
 }
 \arguments{
 \item{object}{A model object of class ppmBatch}
