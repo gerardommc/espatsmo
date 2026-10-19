@@ -2,6 +2,7 @@
 #' @description
 #' Plot a batch of predictions froma ppmBatch object
 #' @param x A stackList object
+#' @param model Numeric value indicating the model number to plot
 #' @return A r graphics plot
 #' @examples 
 #' r <- system.file("extdata", "ChelsaBio.tif", package = "espatsmo") |>  terra::rast() |> scale()
@@ -34,8 +35,28 @@
 #' @export
 #' @method plot stackList
 
-plot.stackList <- function(x){
-      for(i in seq_along(x)){
-            plot(x[[i]])
+plot.stackList <- function(x, model = NULL){
+
+      if(is.null(model)){
+            for(i in seq_along(x)){
+                  terra::plot(x[[i]])
+            }
+      }
+
+      if(!is.null(model)){
+
+            if(model %in% seq_along(x$models)){
+                  stop("Cannot extract model ids which are not contained within the list of fitted models, please provide valid id numbers")
+            }
+            
+            if(length(model) > 1){
+                  for(i in model){
+                        terra::plot(x[[i]])
+                  }
+            }
+
+            if(length(model) == 1){
+                  terra::plot(x[[model]])
+            }
       }
 }

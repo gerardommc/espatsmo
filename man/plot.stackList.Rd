@@ -4,10 +4,12 @@
 \alias{plot.stackList}
 \title{Plot a stackList of batch model predictions}
 \usage{
-\method{plot}{stackList}(x)
+\method{plot}{stackList}(x, model = NULL)
 }
 \arguments{
 \item{x}{A stackList object}
+
+\item{model}{Numeric value indicating the model number to plot}
 }
 \value{
 A r graphics plot
