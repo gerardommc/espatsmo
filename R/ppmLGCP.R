@@ -219,7 +219,7 @@ ppmLGCP <- function(points = NULL,
           bias.ppp <- spatstat.geom::ppp(x = bias.data$x, 
                                          y = bias.data$y, window = win)
           
-          dens.r <- terra::rast(spatstat.geom::density.ppp(bias.ppp, 
+          dens.r <- terra::rast(spatstat.explore::density.ppp(bias.ppp, 
                                                            positive = weight.bias.conf$positive, kernel = weight.bias.conf$kernel, 
                                                            sigma = weight.bias.conf$sigma, varcov = weight.bias.conf$varcov, 
                                                            weights = weight.bias.conf$weights, edge = weight.bias.conf$edge))
