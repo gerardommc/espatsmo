@@ -233,13 +233,14 @@ ppmLGCP <- function(points = NULL,
           
           area <- dx * dy
           
-          sum.bias <- terra::global(bias.data, sum, na.rm = TRUE)
+          sum.bias <- terra::global(dens.r, sum, na.rm = TRUE)
           
-          ones <- terra::classify(bias.data, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
+          ones <- terra::classify(dens.r, rcl = matrix(c(-Inf, Inf, 1), ncol = 3))
           
           sum.ones <- terra::global(ones, sum, na.rm = TRUE)
           
-          bias.data <- bias.data / sum.bias$sum
+          bias.data <- dens.r / sum.bias$sum
+        
           p.area <- ones / sum.ones$sum
           
           Ratio <- bias.data / p.area
